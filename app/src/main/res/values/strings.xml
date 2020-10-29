@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Web Browser App</string>
+    <string name="urlText">Enter Web Address</string>
+    <string name="home">https://www.google.com</string>
+    <string name="go">Go</string>
+    <string name="back">Back</string>
+    <string name="next">Next</string>
+    <string name="runTimeException_control">"Please implement webPageInterface to attach PageControl fragment"</string>
+    <string name="runTimeException_view">"Please implement webPageInterface to attach PageViewer fragment"</string>
+</resources>
