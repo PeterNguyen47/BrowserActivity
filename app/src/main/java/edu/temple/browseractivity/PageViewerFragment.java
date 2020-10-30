@@ -40,20 +40,12 @@ public class PageViewerFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-
     // Instances are saving, but after 3 rotations, app throws NullPointerException
-    /*@Override
+    @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putString(WEB_KEY, webView.getOriginalUrl());
         super.onSaveInstanceState(outState);
-        Log.d("SaveView", "Instance saved: " + true);
-        Log.d("SaveView","OutState saved: " + outState.getString(WEB_KEY,webView.getOriginalUrl()));
-    }*/
+        webView.saveState(outState);
+    }
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -68,12 +60,6 @@ public class PageViewerFragment extends Fragment {
         //urlEditText = l.findViewById(R.id.urlEditText);
         webView = l.findViewById(R.id.webView);
 
-        // Homepage set to Google.com
-        webView.loadUrl(getString(R.string.home));
-
-        // Enable Javascript
-        webView.getSettings().setJavaScriptEnabled(true);
-
         // Getting links to open in webView
         webView.setWebViewClient(new WebViewClient() {
             @Override
@@ -87,13 +73,22 @@ public class PageViewerFragment extends Fragment {
                 parentActivity.updatePage(url);
             }
         });
+
+        // Enable Javascript
+        webView.getSettings().setJavaScriptEnabled(true);
+
+        if(null == savedInstanceState) {
+            webView.loadUrl(getString(R.string.home));
+        } else {
+            webView.restoreState(savedInstanceState);
+        }
         return l;
     }
 
     // When a new URL is searched, URL is automatically corrected if needed
     public void newPage(String urlInput) {
-        if (!(urlInput.equals("https://"))) {
-            urlInput = ("https://www." + urlInput);
+        if (!(urlInput.startsWith("https://") || urlInput.startsWith("http://"))) {
+            urlInput = ("https://" + urlInput);
         }
         try {
             URL url = new URL(urlInput);
