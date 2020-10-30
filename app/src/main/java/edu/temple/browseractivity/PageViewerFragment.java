@@ -40,8 +40,7 @@ public class PageViewerFragment extends Fragment {
             throw new RuntimeException(String.valueOf(R.string.runTimeException_view));
         }
     }
-
-    // Instances are saving, but after 3 rotations, app throws NullPointerException
+    
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
