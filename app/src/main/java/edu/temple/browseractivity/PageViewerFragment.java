@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.annotation.NonNull;
 
@@ -82,6 +83,8 @@ public class PageViewerFragment extends Fragment {
         } else {
             webView.restoreState(savedInstanceState);
         }
+
+
         return l;
     }
 
