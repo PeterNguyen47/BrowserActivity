@@ -40,7 +40,7 @@ public class PageViewerFragment extends Fragment {
             throw new RuntimeException(String.valueOf(R.string.runTimeException_view));
         }
     }
-    
+
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
