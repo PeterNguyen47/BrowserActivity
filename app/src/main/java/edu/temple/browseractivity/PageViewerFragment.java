@@ -114,6 +114,7 @@ public class PageViewerFragment extends Fragment {
         }
     }
 
+    
     // Conditions when Next button is clicked
     public void canGoForwardClicked() {
         if (webView.canGoForward()) {
