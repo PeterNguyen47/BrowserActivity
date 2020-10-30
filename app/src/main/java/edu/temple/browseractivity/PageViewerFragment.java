@@ -6,7 +6,6 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,8 +19,6 @@ import java.net.URL;
 import java.net.MalformedURLException;
 
 public class PageViewerFragment extends Fragment {
-
-    private static final String WEB_KEY = "webKey";
 
     View l;
     Context context;
@@ -101,7 +98,6 @@ public class PageViewerFragment extends Fragment {
         try {
             URL url = new URL(urlInput);
             webView.loadUrl(url.toString());
-
         }
         catch (MalformedURLException e) {
             Toast.makeText(context, "URL is Invalid", Toast.LENGTH_SHORT).show();

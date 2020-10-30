@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -20,6 +19,9 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
     FragmentManager fm;
     FragmentTransaction ft;
 
+    Fragment control;
+    Fragment viewer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,23 +31,40 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         // Set browser app label
         Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.app_name);
 
-        pageControlFragment = new PageControlFragment();
-        pageViewerFragment = new PageViewerFragment();
-
         fm = getSupportFragmentManager();
         ft = fm.beginTransaction();
 
         // Page control fragment
-        fm.findFragmentById(R.id.page_control);
+        control = fm.findFragmentById(R.id.page_control);
+        if (control == null) {
+            pageControlFragment = new PageControlFragment();
+            control = pageControlFragment;
         fm.beginTransaction()
                 .add(R.id.page_control, pageControlFragment).addToBackStack(null)
                 .commit();
+        }
 
         // Page viewer fragment
-        fm.findFragmentById(R.id.page_viewer);
+        viewer = fm.findFragmentById(R.id.page_viewer);
+        if(viewer == null) {
+            pageViewerFragment = new PageViewerFragment();
+            viewer = pageViewerFragment;
         fm.beginTransaction()
                 .add(R.id.page_viewer, pageViewerFragment).addToBackStack(null)
                 .commit();
+        }
+    }
+
+    // Prevent fragments overlapping
+    @Override
+    public void onAttachFragment(@NonNull Fragment fragment) {
+        super.onAttachFragment(fragment);
+        if (fragment instanceof PageControlFragment) {
+            pageControlFragment = (PageControlFragment) fragment;
+        }
+        else if (fragment instanceof PageViewerFragment) {
+            pageViewerFragment = (PageViewerFragment)fragment;
+        }
     }
 
     @Override

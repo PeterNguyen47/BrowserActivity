@@ -8,15 +8,15 @@
 
     <EditText
         android:id="@+id/urlEditText"
-        android:layout_width="280dp"
+        android:layout_width="250dp"
         android:layout_height="50dp"
         android:layout_marginStart="5dp"
-        android:hint="@string/urlText"
         android:autofillHints=""
+        android:hint="@string/urlText"
+        android:inputType="textUri"
         app:layout_constraintEnd_toStartOf="@+id/goBtn"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:inputType="textUri" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/goBtn"

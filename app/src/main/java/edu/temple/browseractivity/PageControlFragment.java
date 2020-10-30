@@ -16,8 +16,6 @@ import android.widget.ImageButton;
 
 public class PageControlFragment extends Fragment {
 
-    private final String WEB_KEY = "webKey";
-
     View l;
     Context context;
 
@@ -25,8 +23,6 @@ public class PageControlFragment extends Fragment {
     ImageButton goBtn;
     ImageButton backBtn;
     ImageButton nextBtn;
-
-    String url;
 
     webPageInterface parentActivity;
 
@@ -36,7 +32,6 @@ public class PageControlFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-
         if (context instanceof webPageInterface) {
             parentActivity = (webPageInterface) context;
         } else {
@@ -47,12 +42,6 @@ public class PageControlFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Should load the saved Instance state of last web page after rotation
-        /*if (savedInstanceState != null) {
-            savedInstanceState.getString(urlEditText.getText().toString());
-            Log.d("Load Saved","Saved Instance: " + savedInstanceState);
-        }*/
     }
 
     @Override
@@ -75,9 +64,7 @@ public class PageControlFragment extends Fragment {
             public void onClick(View v) {
                 parentActivity.goClicked();
                 Log.d("Clicks", "Go is clicked: " + (parentActivity != null));
-
-                urlEditText.setText(urlEditText.getText().toString());
-                Log.d("Clicks", "URL updated to: " + urlEditText.getText().toString());
+                Log.d("Click Go", "URL updated to: " + urlEditText.getText());
             }
         });
 
@@ -86,9 +73,7 @@ public class PageControlFragment extends Fragment {
             public void onClick(View v) {
                 parentActivity.backClicked();
                 Log.d("Clicks", "Back is clicked: " + (parentActivity != null));
-
-                urlEditText.setText(urlEditText.getText().toString());
-                Log.d("Clicks", "URL updated to: " + urlEditText.getText().toString());
+                Log.d("Click Back", "URL updated to: " + urlEditText.getText());
             }
         });
 
@@ -97,21 +82,12 @@ public class PageControlFragment extends Fragment {
             public void onClick(View v) {
                 parentActivity.nextClicked();
                 Log.d("Clicks", "Next is clicked: " + (parentActivity != null));
+                Log.d("Click Next", "URL updated to: " + urlEditText.getText());
             }
         });
 
         return l;
     }
-
-    // Instances are saving, but after 3 rotations, app throws NullPointerException
-    // URL in nav bar seems to be layered for some reason
-    /*@Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putString(WEB_KEY, url);
-        super.onSaveInstanceState(outState);
-        Log.d("Save", "Instance saved: " + true);
-        Log.d("Save","OutState saved: " + outState.getString(WEB_KEY,url));
-    }*/
 
     // Method to update URL in urlEditText (search bar)
     public void updateURL(String url) {
