@@ -113,7 +113,6 @@ public class PageViewerFragment extends Fragment {
             Toast.makeText(context, "No Previous History", Toast.LENGTH_SHORT).show();
         }
     }
-
     
     // Conditions when Next button is clicked
     public void canGoForwardClicked() {
