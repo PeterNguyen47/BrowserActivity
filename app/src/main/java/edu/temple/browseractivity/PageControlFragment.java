@@ -1,7 +1,6 @@
 package edu.temple.browseractivity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,35 +11,27 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
 public class PageControlFragment extends Fragment {
 
-    public static final String WEB_KEY = "webKey";
-    private static String newURL;
+    private final String WEB_KEY = "webKey";
 
     View l;
     Context context;
 
-    WebView webView;
     EditText urlEditText;
     ImageButton goBtn;
     ImageButton backBtn;
     ImageButton nextBtn;
 
+    String url;
+
     webPageInterface parentActivity;
 
-    public PageControlFragment() {}
-
-    /*public static PageControlFragment newInstance(String newURL) {
-        PageControlFragment pcf = new PageControlFragment();
-        Bundle args = new Bundle();
-        args.putString(WEB_KEY,newURL);
-        pcf.setArguments(args);
-        return pcf;
-    }*/
+    public PageControlFragment() {
+    }
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -48,8 +39,7 @@ public class PageControlFragment extends Fragment {
 
         if (context instanceof webPageInterface) {
             parentActivity = (webPageInterface) context;
-        }
-        else {
+        } else {
             throw new RuntimeException(String.valueOf(R.string.runTimeException_control));
         }
     }
@@ -58,11 +48,17 @@ public class PageControlFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Should load the saved Instance state of last web page after rotation
+        /*if (savedInstanceState != null) {
+            savedInstanceState.getString(urlEditText.getText().toString());
+            Log.d("Load Saved","Saved Instance: " + savedInstanceState);
+        }*/
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         l = inflater.inflate(R.layout.fragment_page_control, container, false);
 
@@ -78,10 +74,10 @@ public class PageControlFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 parentActivity.goClicked();
-                Log.d("Clicks","Go is clicked: " + (parentActivity != null));
+                Log.d("Clicks", "Go is clicked: " + (parentActivity != null));
 
-                urlEditText.setText((urlLink()));
-                Log.d("Clicks", "URL updated to: " + urlLink());
+                urlEditText.setText(urlEditText.getText().toString());
+                Log.d("Clicks", "URL updated to: " + urlEditText.getText().toString());
             }
         });
 
@@ -89,13 +85,10 @@ public class PageControlFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 parentActivity.backClicked();
-                Log.d("Clicks","Back is clicked: " + (parentActivity != null));
+                Log.d("Clicks", "Back is clicked: " + (parentActivity != null));
 
-                //TODO get Edit Text to update URL of previous web page in Edit Text
-                urlEditText.setText(urlLink());
+                urlEditText.setText(urlEditText.getText().toString());
                 Log.d("Clicks", "URL updated to: " + urlEditText.getText().toString());
-
-
             }
         });
 
@@ -103,23 +96,26 @@ public class PageControlFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 parentActivity.nextClicked();
-                Log.d("Clicks","Next is clicked: " + (parentActivity != null));
+                Log.d("Clicks", "Next is clicked: " + (parentActivity != null));
             }
         });
 
         return l;
     }
 
-    // Method that contains web page URL
-    public String urlLink() {
-        newURL = urlEditText.getText().toString();
-        Log.d("New URL","New URL: " + newURL);
-        return newURL;
-    }
+    // Instances are saving, but after 3 rotations, app throws NullPointerException
+    // URL in nav bar seems to be layered for some reason
+    /*@Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putString(WEB_KEY, url);
+        super.onSaveInstanceState(outState);
+        Log.d("Save", "Instance saved: " + true);
+        Log.d("Save","OutState saved: " + outState.getString(WEB_KEY,url));
+    }*/
 
     // Method to update URL in urlEditText (search bar)
-    public void updateURL(String urlText) {
-        urlEditText.setText(urlText);
+    public void updateURL(String url) {
+        urlEditText.setText(url);
     }
 
     interface webPageInterface {

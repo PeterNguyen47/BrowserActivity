@@ -2,11 +2,15 @@ package edu.temple.browseractivity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
+
+import java.util.Objects;
 
 public class BrowserActivity extends AppCompatActivity implements PageControlFragment.webPageInterface, PageViewerFragment.webPageInterface {
 
@@ -19,10 +23,11 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         // Set browser app label
-        getSupportActionBar().setTitle(R.string.app_name);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.app_name);
 
         pageControlFragment = new PageControlFragment();
         pageViewerFragment = new PageViewerFragment();
@@ -30,16 +35,16 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         fm = getSupportFragmentManager();
         ft = fm.beginTransaction();
 
-        // page control fragment
+        // Page control fragment
         fm.findFragmentById(R.id.page_control);
         fm.beginTransaction()
-                .replace(R.id.page_control,pageControlFragment).addToBackStack(null)
+                .add(R.id.page_control, pageControlFragment).addToBackStack(null)
                 .commit();
 
-        // page viewer fragment
+        // Page viewer fragment
         fm.findFragmentById(R.id.page_viewer);
         fm.beginTransaction()
-                .replace(R.id.page_viewer,pageViewerFragment).addToBackStack(null)
+                .add(R.id.page_viewer, pageViewerFragment).addToBackStack(null)
                 .commit();
     }
 
@@ -62,19 +67,11 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
     }
 
     @Override
-    public void updatePage() {
+    public void updatePage(String url) {
         // When user selects link on web page, Page Viewer Fragment will display new web page
-        // object urlText contains URL
-        String urlText = pageViewerFragment.currentURL();
-        Log.d("Current URL","Current URL: " + urlText);
+        Log.d("Current URL", "Current URL: " + url);
 
         // Telling page Control Frag to update URL
-        pageControlFragment.updateURL(urlText);
-    }
-
-    // Save UI state in event of orientaion change?
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
+        pageControlFragment.updateURL(url);
     }
 }
