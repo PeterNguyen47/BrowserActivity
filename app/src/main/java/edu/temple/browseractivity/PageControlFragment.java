@@ -20,9 +20,7 @@ public class PageControlFragment extends Fragment {
     Context context;
 
     EditText urlEditText;
-    ImageButton goBtn;
-    ImageButton backBtn;
-    ImageButton nextBtn;
+    ImageButton goBtn, backBtn, nextBtn;
 
     webPageInterface parentActivity;
 
@@ -47,7 +45,6 @@ public class PageControlFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         // Inflate the layout for this fragment
         l = inflater.inflate(R.layout.fragment_page_control, container, false);
 

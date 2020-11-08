@@ -8,25 +8,33 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TabHost;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class BrowserActivity extends AppCompatActivity implements PageControlFragment.webPageInterface, PageViewerFragment.webPageInterface {
 
     PageControlFragment pageControlFragment;
     PageViewerFragment pageViewerFragment;
+    BrowserControlFragment browserControlFragment;
+    PageListFragment pageListFragment;
+    PagerFragment pagerFragment;
 
     FragmentManager fm;
     FragmentTransaction ft;
 
     Fragment control;
     Fragment viewer;
+    Fragment browser;
+    Fragment list;
+    Fragment pager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
+
 
         // Set browser app label
         Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.app_name);
@@ -39,20 +47,32 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         if (control == null) {
             pageControlFragment = new PageControlFragment();
             control = pageControlFragment;
-        fm.beginTransaction()
-                .add(R.id.page_control, pageControlFragment).addToBackStack(null)
+        ft.add(R.id.page_control, new PageControlFragment()).addToBackStack(null)
                 .commit();
         }
 
         // Page viewer fragment
-        viewer = fm.findFragmentById(R.id.page_viewer);
-        if(viewer == null) {
+        viewer = fm.findFragmentById(R.id.page_display);
+        if (viewer == null) {
             pageViewerFragment = new PageViewerFragment();
             viewer = pageViewerFragment;
         fm.beginTransaction()
-                .add(R.id.page_viewer, pageViewerFragment).addToBackStack(null)
+                .add(R.id.page_display, pageViewerFragment).addToBackStack(null)
                 .commit();
         }
+
+        // Browser control fragment
+        browser = fm.findFragmentById(R.id.browser_control);
+        if (browser == null) {
+            browserControlFragment = new BrowserControlFragment();
+            browser = browserControlFragment;
+        fm.beginTransaction()
+                .add(R.id.browser_control, browserControlFragment)
+                .commit();
+        }
+
+        //TODO add pager frag?
+
     }
 
     // Prevent fragments overlapping
@@ -63,7 +83,10 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
             pageControlFragment = (PageControlFragment) fragment;
         }
         else if (fragment instanceof PageViewerFragment) {
-            pageViewerFragment = (PageViewerFragment)fragment;
+            pageViewerFragment = (PageViewerFragment) fragment;
+        }
+        else if (fragment instanceof BrowserControlFragment) {
+            browserControlFragment = (BrowserControlFragment) fragment;
         }
     }
 
@@ -93,4 +116,9 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         // Telling page Control Frag to update URL
         pageControlFragment.updateURL(url);
     }
+
+
+    //TODO get new web page from new page button
+    //TODO activity should display as its title, the page title of the current webpage
+
 }

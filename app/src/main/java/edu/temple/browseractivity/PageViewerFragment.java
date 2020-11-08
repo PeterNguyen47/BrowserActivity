@@ -57,7 +57,6 @@ public class PageViewerFragment extends Fragment {
 
         context = l.getContext();
 
-        //urlEditText = l.findViewById(R.id.urlEditText);
         webView = l.findViewById(R.id.webView);
 
         // Getting links to open in webView
@@ -71,6 +70,7 @@ public class PageViewerFragment extends Fragment {
             public void onPageFinished(WebView webView, String url) {
                 super.onPageFinished(webView, url);
                 parentActivity.updatePage(url);
+
             }
         });
 
@@ -119,6 +119,11 @@ public class PageViewerFragment extends Fragment {
         else {
             Toast.makeText(context, "Future is not yet written", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    // Conditions when new page button is clicked
+    public void showNewPage() {
+        webView.loadUrl(getString(R.string.home));
     }
 
     interface webPageInterface {

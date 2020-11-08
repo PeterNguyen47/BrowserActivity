@@ -7,4 +7,7 @@
     <string name="next">Next</string>
     <string name="runTimeException_control">"Please implement webPageInterface to attach PageControl fragment"</string>
     <string name="runTimeException_view">"Please implement webPageInterface to attach PageViewer fragment"</string>
+    <string name="newPage">New Page</string>
+    <string name="runTimeException_browser_control">Please implement webPageInterface to attach BrowserControl Fragment</string>
+    <string name="runTimeException_page_list">Please implement webPageInterface to attach PageList Fragment</string>
 </resources>
