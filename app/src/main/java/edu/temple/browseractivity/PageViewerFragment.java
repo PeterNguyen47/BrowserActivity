@@ -24,6 +24,7 @@ public class PageViewerFragment extends Fragment {
     View l;
     Context context;
     WebView webView;
+    URL url;
     webPageInterface parentActivity;
 
     public PageViewerFragment() {
@@ -59,7 +60,7 @@ public class PageViewerFragment extends Fragment {
 
         webView = l.findViewById(R.id.webView);
 
-        // Getting links to open in webView
+        // Getting links to open in webView not android browser
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
@@ -77,7 +78,7 @@ public class PageViewerFragment extends Fragment {
         // Enable Javascript
         webView.getSettings().setJavaScriptEnabled(true);
 
-        if(null == savedInstanceState) {
+        if (savedInstanceState == null) {
             webView.loadUrl(getString(R.string.home));
         } else {
             webView.restoreState(savedInstanceState);
@@ -93,7 +94,7 @@ public class PageViewerFragment extends Fragment {
             urlInput = ("https://" + urlInput);
         }
         try {
-            URL url = new URL(urlInput);
+            url = new URL(urlInput);
             webView.loadUrl(url.toString());
         }
         catch (MalformedURLException e) {
@@ -122,11 +123,18 @@ public class PageViewerFragment extends Fragment {
     }
 
     // Conditions when new page button is clicked
-    public void showNewPage() {
+    public void anotherPage() {
         webView.loadUrl(getString(R.string.home));
     }
 
-    interface webPageInterface {
+    // conditions when a URL in the listView is clicked
+    //TODO when URLs in fragment_page_list layout are clicked, corresponding website is displayed in fragment_page_viewer layout
+    public void listPage() {
+    }
+
+    // interface to talk to fragment
+    public interface webPageInterface {
         void updatePage(String url);
+        void changeAppTitle(String app);
     }
 }

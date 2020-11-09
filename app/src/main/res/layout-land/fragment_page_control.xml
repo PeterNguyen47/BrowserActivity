@@ -9,50 +9,50 @@
 
     <EditText
         android:id="@+id/urlEditText"
-        android:layout_width="600dp"
+        android:layout_width="550dp"
         android:layout_height="50dp"
+        android:autofillHints=""
         android:hint="@string/urlText"
+        android:inputType="textUri"
         app:layout_constraintEnd_toStartOf="@+id/goBtn"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:inputType="textUri"
-        android:autofillHints="" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/goBtn"
+        android:layout_width="70dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="5dp"
+        android:layout_weight="1"
+        android:contentDescription="@string/go"
+        android:src="@android:drawable/ic_menu_send"
+        app:layout_constraintEnd_toStartOf="@+id/backBtn"
+        app:layout_constraintStart_toEndOf="@+id/urlEditText"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/backBtn"
         android:layout_width="60dp"
         android:layout_height="40dp"
         android:layout_marginTop="5dp"
         android:layout_weight="1"
-        android:src="@android:drawable/ic_menu_search"
-        app:layout_constraintEnd_toStartOf="@+id/backBtn"
-        app:layout_constraintStart_toEndOf="@+id/urlEditText"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/go" />
-
-    <ImageButton
-        android:id="@+id/backBtn"
-        android:layout_width="50dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="5dp"
-        android:layout_weight="1"
+        android:contentDescription="@string/back"
         android:src="@android:drawable/ic_menu_revert"
         app:layout_constraintEnd_toStartOf="@+id/nextBtn"
         app:layout_constraintStart_toEndOf="@+id/goBtn"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/back" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/nextBtn"
-        android:layout_width="50dp"
+        android:layout_width="60dp"
         android:layout_height="40dp"
         android:layout_marginTop="5dp"
         android:layout_weight="1"
+        android:contentDescription="@string/next"
         android:rotation="180"
         android:src="@android:drawable/ic_menu_revert"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/backBtn"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/next"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

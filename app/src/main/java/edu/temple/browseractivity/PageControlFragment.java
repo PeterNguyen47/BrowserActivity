@@ -56,6 +56,7 @@ public class PageControlFragment extends Fragment {
         context = l.getContext();
 
         // Listeners set for each button's functionality
+        //TODO all buttons should account for the PageViewFragment that is currently displayed in the ViewPager shown in the PaperFragment
         goBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

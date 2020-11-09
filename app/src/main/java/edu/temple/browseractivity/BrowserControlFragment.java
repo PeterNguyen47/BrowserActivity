@@ -29,6 +29,16 @@ public class BrowserControlFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof webPageInterface) {
+            parentActivity = (webPageInterface) context;
+        } else {
+            throw new RuntimeException(String.valueOf(R.string.runTimeException_browser_control));
+        }
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
@@ -39,27 +49,27 @@ public class BrowserControlFragment extends Fragment {
         // Inflate the layout for this fragment
         l = inflater.inflate(R.layout.fragment_browser_control, container, false);
 
-        l.findViewById(R.id.newPageBtn);
+        newPageBtn = l.findViewById(R.id.newPageBtn);
 
         context = l.getContext();
 
-        newPageBtn = new ImageButton(context);
         // Listener for new page button
         newPageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
             parentActivity.newPageClicked();
+            Log.d("New Page","newPageBtn clicked: " + (parentActivity != null));
 
-            //TODO button should create a new browser page (new instance of PageViewFragment) and display ViewPager in PagerFragment
-            //TODO if in Landscape, page should be 'listed' in Listview on PageListFragment
-            //TODO when clicked
+            //TODO if in Landscape, URLs should be 'listed' in the ListView found in the PageListFragment
+            //TODO when in landscape, clicked URLs from listView, via textView, should display website in fragment_page_viewer layout
+            //TODO when newPageBtn clicked, new instance of PageViewerFragment should be created, attached and displayed in ViewPager in PagerFragment
             }
         });
 
         return l;
-
     }
 
+    // interface for fragment to talk to activity
     interface webPageInterface {
         void newPageClicked();
 

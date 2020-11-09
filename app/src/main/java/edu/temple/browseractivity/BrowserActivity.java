@@ -8,12 +8,15 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.TabHost;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class BrowserActivity extends AppCompatActivity implements PageControlFragment.webPageInterface, PageViewerFragment.webPageInterface {
+public class BrowserActivity extends AppCompatActivity implements PageControlFragment.webPageInterface,
+        PageViewerFragment.webPageInterface,
+        BrowserControlFragment.webPageInterface,
+        PageListFragment.webPageInterface,
+        PagerFragment.webPageInterface {
 
     PageControlFragment pageControlFragment;
     PageViewerFragment pageViewerFragment;
@@ -30,11 +33,14 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
     Fragment list;
     Fragment pager;
 
+    Boolean landscape;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        landscape = findViewById(R.id.page_list) != null;
 
         // Set browser app label
         Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.app_name);
@@ -42,7 +48,7 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         fm = getSupportFragmentManager();
         ft = fm.beginTransaction();
 
-        // Page control fragment
+        // Page control fragment manager
         control = fm.findFragmentById(R.id.page_control);
         if (control == null) {
             pageControlFragment = new PageControlFragment();
@@ -51,7 +57,7 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
                 .commit();
         }
 
-        // Page viewer fragment
+        // Page viewer fragment manager
         viewer = fm.findFragmentById(R.id.page_display);
         if (viewer == null) {
             pageViewerFragment = new PageViewerFragment();
@@ -61,7 +67,7 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
                 .commit();
         }
 
-        // Browser control fragment
+        // Browser control fragment manager
         browser = fm.findFragmentById(R.id.browser_control);
         if (browser == null) {
             browserControlFragment = new BrowserControlFragment();
@@ -71,8 +77,23 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
                 .commit();
         }
 
-        //TODO add pager frag?
+        // Page list fragment manager
+        list = fm.findFragmentById(R.id.pageList);
+        if (landscape) {
+            pageListFragment = new PageListFragment();
+            fm.beginTransaction()
+                    .add(R.id.pageList, pageListFragment)
+                    .commit();
+        }
 
+        // Pager fragment fragment manager
+        pager = fm.findFragmentById(R.id.pagerViewer);
+        if (landscape) {
+            pagerFragment = new PagerFragment();
+            fm.beginTransaction()
+                    .add(R.id.pagerViewer, pagerFragment)
+                    .commit();
+        }
     }
 
     // Prevent fragments overlapping
@@ -88,6 +109,9 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         else if (fragment instanceof BrowserControlFragment) {
             browserControlFragment = (BrowserControlFragment) fragment;
         }
+        //else if (fragment instanceof PageListFragment) {
+            //pageListFragment = (PageListFragment) fragment;
+        //}
     }
 
     @Override
@@ -117,8 +141,27 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         pageControlFragment.updateURL(url);
     }
 
-
-    //TODO get new web page from new page button
     //TODO activity should display as its title, the page title of the current webpage
+    @Override
+    public void changeAppTitle(String app) {
+    }
 
+    @Override
+    public void newPageClicked() {
+        pageViewerFragment.anotherPage();
+    }
+
+    // method to talk to pageViewerFragment????
+    public void showItem(ArrayList<String> listArray) {
+        if (landscape) {
+            pageViewerFragment.newPage(pageControlFragment.urlEditText.getText().toString());
+        }
+    }
+
+    // method to talk to ????
+    public void itemClicked(int item, String list){
+        if (landscape) {
+            pageViewerFragment.listPage();
+        }
+    }
 }
