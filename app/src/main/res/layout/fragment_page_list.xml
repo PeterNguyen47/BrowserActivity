@@ -6,10 +6,10 @@
     tools:context=".PageListFragment">
 
     <ListView
-        android:id="@+id/pageList"
+        android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-    
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"

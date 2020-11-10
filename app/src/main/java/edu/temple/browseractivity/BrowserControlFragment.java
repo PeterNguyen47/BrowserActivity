@@ -59,10 +59,6 @@ public class BrowserControlFragment extends Fragment {
             public void onClick(View v) {
             parentActivity.newPageClicked();
             Log.d("New Page","newPageBtn clicked: " + (parentActivity != null));
-
-            //TODO if in Landscape, URLs should be 'listed' in the ListView found in the PageListFragment
-            //TODO when in landscape, clicked URLs from listView, via textView, should display website in fragment_page_viewer layout
-            //TODO when newPageBtn clicked, new instance of PageViewerFragment should be created, attached and displayed in ViewPager in PagerFragment
             }
         });
 
@@ -72,6 +68,9 @@ public class BrowserControlFragment extends Fragment {
     // interface for fragment to talk to activity
     interface webPageInterface {
         void newPageClicked();
-
     }
 }
+
+//TODO in Landscape, visited URLs should append to ListView found in the PageListFragment
+//TODO in landscape, clicked URLs from listView should display website in fragment_page_viewer layout
+//TODO if newPageBtn clicked, new instance of PageViewerFragment should be created, attached and displayed in ViewPager in PagerFragment

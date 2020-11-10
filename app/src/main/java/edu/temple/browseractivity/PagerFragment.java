@@ -19,12 +19,6 @@ public class PagerFragment extends Fragment {
 
     webPageInterface parentActivity;
 
-
-    //TODO will use a ViewPager and FragmentStatePagerAdapter to allow user to use swiping to switch instances of PageViewerFragments
-    //TODO when user creates a new page from the BrowserControlFragment, it should add to end of the ViewPager and automatically displayed
-    //TODO swiping to another page should updated in search bar
-
-
     public PagerFragment() {
         // Required empty public constructor
     }
@@ -40,7 +34,7 @@ public class PagerFragment extends Fragment {
     }
 
     //public void sendList(int item){
-        //viewPager.setCurrentItem(item);
+    //viewPager.setCurrentItem(item);
     //}
 
     @Override
@@ -60,3 +54,6 @@ public class PagerFragment extends Fragment {
     interface webPageInterface {
     }
 }
+
+//TODO in landscape, have searched URLs populate listView as a textView
+//TODO in landscape, when URLs from listView clicked, corresponding web page is displayed (should notify activity when item is clicked)

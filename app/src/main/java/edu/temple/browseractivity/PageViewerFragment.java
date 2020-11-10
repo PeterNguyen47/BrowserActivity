@@ -128,7 +128,6 @@ public class PageViewerFragment extends Fragment {
     }
 
     // conditions when a URL in the listView is clicked
-    //TODO when URLs in fragment_page_list layout are clicked, corresponding website is displayed in fragment_page_viewer layout
     public void listPage() {
     }
 
@@ -138,3 +137,5 @@ public class PageViewerFragment extends Fragment {
         void changeAppTitle(String app);
     }
 }
+
+//TODO when URLs in fragment_page_list layout are clicked, corresponding website is displayed in fragment_page_viewer layout

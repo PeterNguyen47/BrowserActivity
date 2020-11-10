@@ -4,10 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -35,6 +39,9 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
 
     Boolean landscape;
 
+    ArrayList<String> listOfURLs;
+    ViewPager viewPager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,8 +60,8 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         if (control == null) {
             pageControlFragment = new PageControlFragment();
             control = pageControlFragment;
-        ft.add(R.id.page_control, new PageControlFragment()).addToBackStack(null)
-                .commit();
+            ft.add(R.id.page_control, new PageControlFragment()).addToBackStack(null)
+                    .commit();
         }
 
         // Page viewer fragment manager
@@ -62,9 +69,9 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         if (viewer == null) {
             pageViewerFragment = new PageViewerFragment();
             viewer = pageViewerFragment;
-        fm.beginTransaction()
-                .add(R.id.page_display, pageViewerFragment).addToBackStack(null)
-                .commit();
+            fm.beginTransaction()
+                    .add(R.id.page_display, pageViewerFragment).addToBackStack(null)
+                    .commit();
         }
 
         // Browser control fragment manager
@@ -72,28 +79,43 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         if (browser == null) {
             browserControlFragment = new BrowserControlFragment();
             browser = browserControlFragment;
-        fm.beginTransaction()
-                .add(R.id.browser_control, browserControlFragment)
-                .commit();
+            fm.beginTransaction()
+                    .add(R.id.browser_control, browserControlFragment)
+                    .commit();
         }
 
         // Page list fragment manager
-        list = fm.findFragmentById(R.id.pageList);
+        list = fm.findFragmentById(R.id.page_list);
         if (landscape) {
             pageListFragment = new PageListFragment();
             fm.beginTransaction()
-                    .add(R.id.pageList, pageListFragment)
+                    .add(R.id.page_list, pageListFragment)
                     .commit();
         }
 
-        // Pager fragment fragment manager
-        pager = fm.findFragmentById(R.id.pagerViewer);
-        if (landscape) {
-            pagerFragment = new PagerFragment();
-            fm.beginTransaction()
-                    .add(R.id.pagerViewer, pagerFragment)
-                    .commit();
-        }
+        /*listOfURLs = new ArrayList<>();
+        viewPager = findViewById(R.id.viewPager);
+        viewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
+            @NonNull
+            @Override
+            public Fragment getItem(int position) {
+                return listOfURLs.get(position);
+            }
+
+            @Override
+            public int getCount() {
+                return listOfURLs.size();
+            }
+        });
+
+        findViewById(R.id.newPageBtn).setOnClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                listOfURLs.toArray(list);
+                viewPager.getAdapter().notifyDataSetChanged();
+            }
+        });*/
+
     }
 
     // Prevent fragments overlapping
@@ -109,9 +131,9 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         else if (fragment instanceof BrowserControlFragment) {
             browserControlFragment = (BrowserControlFragment) fragment;
         }
-        //else if (fragment instanceof PageListFragment) {
-            //pageListFragment = (PageListFragment) fragment;
-        //}
+        else if (fragment instanceof PageListFragment) {
+            pageListFragment = (PageListFragment) fragment;
+        }
     }
 
     @Override
@@ -165,3 +187,6 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         }
     }
 }
+
+//TODO activity should display current URL as its title and update with each URL
+//TODO fix pagerViewer
