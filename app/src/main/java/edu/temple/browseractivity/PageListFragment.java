@@ -16,7 +16,8 @@ import java.util.ArrayList;
 
 public class PageListFragment extends Fragment {
 
-    private static final String WEB_KEY = "webKey";
+    private static final String WEB_KEY1 = "webKey1";
+    private static final String WEB_KEY2 = "webKey2";
 
     View l;
 
@@ -25,11 +26,19 @@ public class PageListFragment extends Fragment {
     ListView listView;
     EditText urlEditText;
     TextView textView;
-    PageListAdapter pageListAdapter;
+
+    int page;
+    String title;
 
     webPageInterface parentActivity;
 
-    public PageListFragment() {
+    public static PageListFragment newInstance(int page, String title) {
+        PageListFragment pageListFragment = new PageListFragment();
+        Bundle args = new Bundle();
+        args.putInt(WEB_KEY1, page);
+        args.putString(WEB_KEY2, title);
+        pageListFragment.setArguments(args);
+        return pageListFragment;
     }
 
     @Override
@@ -44,13 +53,14 @@ public class PageListFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putStringArrayList(WEB_KEY, webPageTitles);
         super.onSaveInstanceState(outState);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        page = getArguments().getInt(WEB_KEY1);
+        title = getArguments().getString(WEB_KEY2);
     }
 
     @Override
@@ -61,14 +71,9 @@ public class PageListFragment extends Fragment {
 
         listView = l.findViewById(R.id.listView);
         urlEditText = l.findViewById(R.id.urlEditText);
+        textView = l.findViewById(R.id.textView);
+        textView.setText(page + title);
 
-        pageListAdapter = new PageListAdapter(getActivity(), webPageTitles);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                parentActivity.itemSelected(position, viewerFragments);
-            }
-        });
         return l;
     }
 

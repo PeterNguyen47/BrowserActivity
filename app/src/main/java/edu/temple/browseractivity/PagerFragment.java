@@ -53,6 +53,34 @@ public class PagerFragment extends Fragment {
 
         viewPager = l.findViewById(R.id.viewPager);
 
+        if (fragments == null) {
+            fragments = new ArrayList<>();
+            viewPager = l.findViewById(R.id.viewPager);
+            viewPager.setAdapter(new FragmentStatePagerAdapter(getChildFragmentManager()) {
+                @NonNull
+                @Override
+                // Returns each web page fragment by position
+                public Fragment getItem(int position) {
+                    return fragments.get(position);
+                }
+
+                @Override
+                public int getItemPosition(@NonNull Object object) {
+                    if (fragments.contains(object)) {
+                        return fragments.indexOf(object);
+                    } else {
+                        return POSITION_NONE;
+                    }
+                }
+
+                // Number of web page fragments
+                @Override
+                public int getCount() {
+                    return fragments.size();
+                }
+            });
+        }
+
         return l;
     }
 

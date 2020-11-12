@@ -108,7 +108,8 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
                     .commit();
         }
 
-        if (fragments == null) {
+
+        if (fragments == null && landscape) {
             fragments = new ArrayList<>();
             viewPager = findViewById(R.id.viewPager);
             viewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
@@ -119,6 +120,15 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
                     return fragments.get(position);
                 }
 
+                @Override
+                public int getItemPosition(@NonNull Object object) {
+                    if (fragments.contains(object)) {
+                        return fragments.indexOf(object);
+                    } else {
+                        return POSITION_NONE;
+                    }
+                }
+
                 // Number of web page fragments
                 @Override
                 public int getCount() {
@@ -126,16 +136,6 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
                 }
             });
         }
-
-        findViewById(R.id.newPageBtn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // add to array list a new web page fragment
-                fragments.add(new PageViewerFragment());
-                // tell viewPager Adapter that data has changed
-                viewPager.getAdapter().notifyDataSetChanged();
-            }
-        });
     }
 
     // Prevent fragments overlapping
