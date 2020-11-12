@@ -25,7 +25,6 @@ public class PagerFragment extends Fragment {
     ArrayList<String> listOfUrls;
 
     webPageInterface parentActivity;
-    MyFragmentAdapter myFragmentAdapter;
 
     public PagerFragment() {
         // Required empty public constructor
@@ -54,27 +53,6 @@ public class PagerFragment extends Fragment {
 
         viewPager = l.findViewById(R.id.viewPager);
 
-        myFragmentAdapter = new MyFragmentAdapter(getChildFragmentManager(), fragments);
-
-        if (savedInstanceState != null) {
-            //fragments = savedInstanceState.getInt(WEB_KEY);
-            viewPager.setAdapter(myFragmentAdapter);
-            viewPager.getAdapter().notifyDataSetChanged();
-            viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                }
-
-                @Override
-                public void onPageSelected(int position) {
-                    parentActivity.getItem(position);
-                }
-
-                @Override
-                public void onPageScrollStateChanged(int state) {
-                }
-            });
-        }
         return l;
     }
 
