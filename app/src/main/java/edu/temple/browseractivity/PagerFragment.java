@@ -5,19 +5,27 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import java.util.ArrayList;
 
 public class PagerFragment extends Fragment {
 
-    View l;
+    private static final String WEB_KEY = "webKey";
 
-    ViewPager pagerViewer;
+    View l;
+    ArrayList<PageViewerFragment> fragments;
+
+    ViewPager viewPager;
+    ArrayList<String> listOfUrls;
 
     webPageInterface parentActivity;
+    MyFragmentAdapter myFragmentAdapter;
 
     public PagerFragment() {
         // Required empty public constructor
@@ -33,10 +41,6 @@ public class PagerFragment extends Fragment {
         }
     }
 
-    //public void sendList(int item){
-    //viewPager.setCurrentItem(item);
-    //}
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,10 +52,40 @@ public class PagerFragment extends Fragment {
         // Inflate the layout for this fragment
         l = inflater.inflate(R.layout.fragment_pager, container, false);
 
+        viewPager = l.findViewById(R.id.viewPager);
+
+        myFragmentAdapter = new MyFragmentAdapter(getChildFragmentManager(), fragments);
+
+        if (savedInstanceState != null) {
+            //fragments = savedInstanceState.getInt(WEB_KEY);
+            viewPager.setAdapter(myFragmentAdapter);
+            viewPager.getAdapter().notifyDataSetChanged();
+            viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+                    parentActivity.getItem(position);
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+                }
+            });
+        }
         return l;
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putStringArrayList(WEB_KEY, listOfUrls);
+    }
+
     interface webPageInterface {
+        void getItem(int position);
     }
 }
 

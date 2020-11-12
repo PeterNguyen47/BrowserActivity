@@ -3,11 +3,8 @@ package edu.temple.browseractivity;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.annotation.NonNull;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +17,8 @@ import java.net.URL;
 import java.net.MalformedURLException;
 
 public class PageViewerFragment extends Fragment {
+
+    private static final String WEB_KEY = "webKey";
 
     View l;
     Context context;
@@ -71,7 +70,6 @@ public class PageViewerFragment extends Fragment {
             public void onPageFinished(WebView webView, String url) {
                 super.onPageFinished(webView, url);
                 parentActivity.updatePage(url);
-
             }
         });
 
@@ -83,8 +81,6 @@ public class PageViewerFragment extends Fragment {
         } else {
             webView.restoreState(savedInstanceState);
         }
-
-
         return l;
     }
 
@@ -129,12 +125,14 @@ public class PageViewerFragment extends Fragment {
 
     // conditions when a URL in the listView is clicked
     public void listPage() {
+        webView.loadUrl(url.toString());
     }
 
     // interface to talk to fragment
     public interface webPageInterface {
         void updatePage(String url);
-        void changeAppTitle(String app);
+        void changeURLTitle(String urlTitle);
+        void countPage(String pageTitles);
     }
 }
 

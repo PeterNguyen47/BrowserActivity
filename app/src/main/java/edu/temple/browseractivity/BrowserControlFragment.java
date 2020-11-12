@@ -14,8 +14,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-import java.text.BreakIterator;
-
 public class BrowserControlFragment extends Fragment {
 
     View l;
@@ -39,8 +37,15 @@ public class BrowserControlFragment extends Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putAll(outState);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.setRetainInstance(true);
     }
 
     @Override
