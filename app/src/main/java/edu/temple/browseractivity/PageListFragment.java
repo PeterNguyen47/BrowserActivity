@@ -73,7 +73,6 @@ public class PageListFragment extends Fragment {
         urlEditText = l.findViewById(R.id.urlEditText);
         textView = l.findViewById(R.id.textView);
         textView.setText(page + title);
-
         return l;
     }
 
