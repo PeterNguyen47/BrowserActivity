@@ -31,7 +31,6 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
     PageListFragment pageListFragment;
     PagerFragment pagerFragment;
     BaseAdapter PageListAdapter;
-    MyFragmentAdapter myFragmentAdapter;
 
     FragmentManager fm;
     FragmentTransaction ft;
@@ -107,10 +106,6 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         if (viewer == null) {
             fm.beginTransaction().add(R.id.page_display, new PageViewerFragment())
                     .commit();
-        }
-
-        if (myFragmentAdapter == null) {
-            myFragmentAdapter = new MyFragmentAdapter(fm, fragments);
         }
 
         if (fragments == null) {
