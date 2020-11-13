@@ -14,7 +14,6 @@ import android.widget.ImageButton;
 public class PageControlFragment extends Fragment {
 
     View l;
-    Context context;
 
     EditText urlEditText;
     ImageButton goBtn, backBtn, nextBtn;
@@ -35,6 +34,11 @@ public class PageControlFragment extends Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setRetainInstance(true);
@@ -50,8 +54,6 @@ public class PageControlFragment extends Fragment {
         backBtn = l.findViewById(R.id.backBtn);
         nextBtn = l.findViewById(R.id.nextBtn);
         urlEditText = l.findViewById(R.id.urlEditText);
-
-        context = l.getContext();
 
         // Listeners set for each button's functionality
         goBtn.setOnClickListener(new View.OnClickListener() {
@@ -93,5 +95,6 @@ public class PageControlFragment extends Fragment {
         void goClicked();
         void nextClicked();
         void backClicked();
+        void setWebURL();
     }
 }

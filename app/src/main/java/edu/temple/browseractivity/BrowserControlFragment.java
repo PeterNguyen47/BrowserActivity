@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageButton;
 
 public class BrowserControlFragment extends Fragment {
@@ -66,7 +65,6 @@ public class BrowserControlFragment extends Fragment {
             Log.d("New Page","newPageBtn clicked: " + (parentActivity != null));
             }
         });
-
         return l;
     }
 
@@ -75,7 +73,3 @@ public class BrowserControlFragment extends Fragment {
         void newPageClicked();
     }
 }
-
-//TODO in Landscape, visited URLs should append to ListView found in the PageListFragment
-//TODO in landscape, clicked URLs from listView should display website in fragment_page_viewer layout
-//TODO if newPageBtn clicked, new instance of PageViewerFragment should be created, attached and displayed in ViewPager in PagerFragment

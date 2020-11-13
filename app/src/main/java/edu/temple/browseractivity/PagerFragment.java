@@ -5,26 +5,23 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class PagerFragment extends Fragment {
 
-    private static final String WEB_KEY = "webKey";
-
     View l;
-    ArrayList<PageViewerFragment> fragments;
 
     ViewPager viewPager;
-    ArrayList<String> listOfUrls;
 
-    webPageInterface parentActivity;
+    PagerAdapter pagerAdapter;
+
+    pagerInterface parentActivity;
 
     public PagerFragment() {
         // Required empty public constructor
@@ -33,8 +30,8 @@ public class PagerFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof webPageInterface) {
-            parentActivity = (webPageInterface) context;
+        if (context instanceof pagerInterface) {
+            parentActivity = (pagerInterface) context;
         } else {
             throw new RuntimeException(String.valueOf(R.string.runTimeException_pagerView));
         }
@@ -53,47 +50,55 @@ public class PagerFragment extends Fragment {
 
         viewPager = l.findViewById(R.id.viewPager);
 
-        if (fragments == null) {
-            fragments = new ArrayList<>();
-            viewPager = l.findViewById(R.id.viewPager);
-            viewPager.setAdapter(new FragmentStatePagerAdapter(getChildFragmentManager()) {
-                @NonNull
-                @Override
-                // Returns each web page fragment by position
-                public Fragment getItem(int position) {
-                    return fragments.get(position);
-                }
+        assert getFragmentManager() != null;
+        pagerAdapter = new PagerAdapter(getFragmentManager(), ((PagerFragment.pagerInterface) Objects.requireNonNull(getActivity())).getItem());
+        viewPager.setAdapter(pagerAdapter);
 
-                @Override
-                public int getItemPosition(@NonNull Object object) {
-                    if (fragments.contains(object)) {
-                        return fragments.indexOf(object);
-                    } else {
-                        return POSITION_NONE;
-                    }
-                }
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                ((PageControlFragment.webPageInterface) Objects.requireNonNull(getActivity())).setWebURL();
+            }
 
-                // Number of web page fragments
-                @Override
-                public int getCount() {
-                    return fragments.size();
-                }
-            });
-        }
+            @Override
+            public void onPageSelected(int position) {
+                ((PageControlFragment.webPageInterface) Objects.requireNonNull(getActivity())).setWebURL();
+            }
 
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                ((PageControlFragment.webPageInterface) Objects.requireNonNull(getActivity())).setWebURL();
+            }
+        });
         return l;
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putStringArrayList(WEB_KEY, listOfUrls);
     }
 
-    interface webPageInterface {
-        void getItem(int position);
+    public void onTabSelected(int position) {
+        viewPager.setCurrentItem(position);
+    }
+
+    public void onChange(){
+        pagerAdapter.notifyDataSetChanged();
+    }
+
+    public int getCurrentPage(){
+        return viewPager.getCurrentItem();
+    }
+
+
+    public void getNewPage(int num){
+        viewPager.setCurrentItem(num);
+    }
+
+    public void setChange() {
+    }
+
+    interface pagerInterface {
+        ArrayList<PageViewerFragment> getItem();
     }
 }
-
-//TODO in landscape, have searched URLs populate listView as a textView
-//TODO in landscape, when URLs from listView clicked, corresponding web page is displayed (should notify activity when item is clicked)

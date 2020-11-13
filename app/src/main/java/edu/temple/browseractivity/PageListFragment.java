@@ -9,34 +9,31 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import java.util.ArrayList;
+
+import java.util.Objects;
 
 public class PageListFragment extends Fragment {
 
-    private static final String WEB_KEY1 = "webKey1";
-    private static final String WEB_KEY2 = "webKey2";
+    private static final String TITLE_KEY = "titleKey";
 
     View l;
 
-    ArrayList<PageViewerFragment> viewerFragments;
-    ArrayList<String> webPageTitles;
     ListView listView;
-    EditText urlEditText;
-    TextView textView;
 
-    int page;
-    String title;
+    ListAdapter listAdapter;
 
-    webPageInterface parentActivity;
+    TabSelectionListener parentActivity;
 
-    public static PageListFragment newInstance(int page, String title) {
+    public PageListFragment() {
+        // Required empty public constructor
+    }
+
+    public static PageListFragment newInstance(String title) {
         PageListFragment pageListFragment = new PageListFragment();
         Bundle args = new Bundle();
-        args.putInt(WEB_KEY1, page);
-        args.putString(WEB_KEY2, title);
+        args.putString(TITLE_KEY, title);
         pageListFragment.setArguments(args);
         return pageListFragment;
     }
@@ -44,8 +41,8 @@ public class PageListFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof webPageInterface) {
-            parentActivity = (webPageInterface) context;
+        if (context instanceof TabSelectionListener) {
+            parentActivity = (TabSelectionListener) context;
         } else {
             throw new RuntimeException(String.valueOf(R.string.runTimeException_page_list));
         }
@@ -59,8 +56,7 @@ public class PageListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        page = getArguments().getInt(WEB_KEY1);
-        title = getArguments().getString(WEB_KEY2);
+        setRetainInstance(true);
     }
 
     @Override
@@ -70,23 +66,28 @@ public class PageListFragment extends Fragment {
         l = inflater.inflate(R.layout.fragment_page_list, container, false);
 
         listView = l.findViewById(R.id.listView);
-        urlEditText = l.findViewById(R.id.urlEditText);
-        textView = l.findViewById(R.id.textView);
-        textView.setText(page + title);
+
+        listAdapter = new ListAdapter(getContext(),
+                ((PagerFragment.pagerInterface) Objects.requireNonNull(getActivity()))
+                        .getItem());
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ((PageListFragment.TabSelectionListener) Objects.requireNonNull(getActivity()))
+                        .onTabSelected(position);
+            }
+        });
         return l;
     }
 
-    public void sendList(ArrayList<String> webPageList) {
-        webPageTitles = webPageList;
-        parentActivity.sendList(listView);
+    public void setChange() {
+        if (listAdapter != null) {
+            listAdapter.notifyDataSetChanged();
+        }
     }
 
-    // interface to talk to activity
-    public interface webPageInterface {
-        void sendList(ListView listView);
-        void itemSelected(int item, ArrayList<PageViewerFragment> pageViewerFragmentArrayList);
+    public interface TabSelectionListener {
+        void onTabSelected(int position);
     }
 }
-
-//TODO in landscape, have searched URLs populate listView as a textView
-//TODO in landscape, when URLs from listView clicked, corresponding web page is displayed (should notify activity when item is clicked)

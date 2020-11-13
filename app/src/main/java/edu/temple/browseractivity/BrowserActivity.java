@@ -4,137 +4,84 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.viewpager.widget.ViewPager;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class BrowserActivity extends AppCompatActivity implements PageControlFragment.webPageInterface,
         PageViewerFragment.webPageInterface,
         BrowserControlFragment.webPageInterface,
-        PageListFragment.webPageInterface,
-        PagerFragment.webPageInterface {
-
-    public static final String URL_KEY = "urlKey";
+        PageListFragment.TabSelectionListener,
+        PagerFragment.pagerInterface {
 
     PageControlFragment pageControlFragment;
     PageViewerFragment pageViewerFragment;
     BrowserControlFragment browserControlFragment;
     PageListFragment pageListFragment;
     PagerFragment pagerFragment;
-    BaseAdapter PageListAdapter;
 
     FragmentManager fm;
     FragmentTransaction ft;
 
-    Fragment control;
-    Fragment viewer;
-    Fragment browser;
-    Fragment list;
-    Fragment pager;
-
     ArrayList<PageViewerFragment> fragments;
     ArrayList<String> webPageTitles;
-
-    Boolean landscape;
-
-    ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        landscape = findViewById(R.id.page_list) != null;
+            fm = getSupportFragmentManager();
+            ft = fm.beginTransaction();
 
-        // Set browser app label
-        Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.app_name);
+        if (fm.findFragmentById(R.id.page_control) == null
+                && fm.findFragmentById(R.id.page_display) == null) {
 
-        fm = getSupportFragmentManager();
-        ft = fm.beginTransaction();
+            fragments = new ArrayList<PageViewerFragment>();
+            fragments.add(new PageViewerFragment());
 
-        // Page control fragment manager
-        control = fm.findFragmentById(R.id.page_control);
-        if (control == null) {
-            control = pageControlFragment;
-            ft.add(R.id.page_control, new PageControlFragment()).addToBackStack(null)
-                    .commit();
+
+            pageControlFragment = new PageControlFragment();
+            ft.add(R.id.page_control, pageControlFragment);
+
+            pagerFragment = new PagerFragment();
+            ft.add(R.id.page_display, pagerFragment);
+
+            browserControlFragment = new BrowserControlFragment();
+            ft.add(R.id.browser_control, browserControlFragment);
+
+            if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+                pageListFragment = new PageListFragment();
+                ft.add(R.id.page_list, pageListFragment);
+            }
+            ft.commit();
         }
+        else {
 
-        // Page viewer fragment manager
-        viewer = fm.findFragmentById(R.id.page_display);
-        if (viewer == null) {
-            viewer = pageViewerFragment;
-            fm.beginTransaction()
-                    .add(R.id.page_display, new PageViewerFragment()).addToBackStack(null)
-                    .commit();
-        }
+            pageControlFragment = (PageControlFragment) fm.findFragmentById(R.id.page_control);
 
-        // Browser control fragment manager
-        browser = fm.findFragmentById(R.id.browser_control);
-        if (browser == null) {
-            browser = browserControlFragment;
-            fm.beginTransaction()
-                    .add(R.id.browser_control, new BrowserControlFragment())
-                    .commit();
-        }
+            browserControlFragment = (BrowserControlFragment) fm.findFragmentById(R.id.browser_control);
 
-        // Page list fragment manager
-        list = fm.findFragmentById(R.id.page_list);
-        if (landscape && list == null) {
-            fm.beginTransaction().add(R.id.page_list, new PageListFragment())
-                    .commit();
-        }
+            pagerFragment = (PagerFragment) fm.findFragmentById(R.id.page_display);
 
-        // Pager fragment fragment manager
-        pager = fm.findFragmentById(R.id.viewPager);
-        if (pager == null) {
-            fm.beginTransaction().add(R.id.page_display, new PagerFragment())
-                    .commit();
-        }
+            if (Configuration.ORIENTATION_LANDSCAPE == getResources().getConfiguration().orientation){
 
-        // Page view fragment manager
-        viewer = fm.findFragmentById(R.id.webView);
-        if (viewer == null) {
-            fm.beginTransaction().add(R.id.page_display, new PageViewerFragment())
-                    .commit();
-        }
+                if(pageListFragment == null) {
+                    pageListFragment = new PageListFragment();
+                    fm = getSupportFragmentManager();
 
-
-        if (fragments == null && landscape) {
-            fragments = new ArrayList<>();
-            viewPager = findViewById(R.id.viewPager);
-            viewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
-                @NonNull
-                @Override
-                // Returns each web page fragment by position
-                public Fragment getItem(int position) {
-                    return fragments.get(position);
+                    ft = fm.beginTransaction();
+                    ft.add(R.id.page_list, pageListFragment);
+                    ft.commit();
                 }
-
-                @Override
-                public int getItemPosition(@NonNull Object object) {
-                    if (fragments.contains(object)) {
-                        return fragments.indexOf(object);
-                    } else {
-                        return POSITION_NONE;
-                    }
+                else {
+                    pageListFragment = (PageListFragment) fm.findFragmentById(R.id.page_list);
                 }
-
-                // Number of web page fragments
-                @Override
-                public int getCount() {
-                    return fragments.size();
-                }
-            });
+            }
         }
     }
 
@@ -169,12 +116,34 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
     public void backClicked() {
         // When user clicks back button, canGoBackClicked is called
         pageViewerFragment.canGoBackClicked();
+        fragments.get(pagerFragment.getCurrentPage()).canGoBackClicked();
+        if (pageListFragment != null ) {
+            pageListFragment.setChange();
+        } else {
+        setTitle(fragments.get(pagerFragment.getCurrentPage()).getPageText());
+        }
+    }
+
+    @Override
+    public void setWebURL() {
+        pageControlFragment.getText(fragments.get(pagerFragment.getCurrentPage()).getWebPage());
+        if (pageListFragment != null) {
+            pageListFragment.setChange();
+        } else {
+        setTitle(fragments.get(pagerFragment.getCurrentPage()).getPageText());
+        }
     }
 
     @Override
     public void nextClicked() {
         // When user clicks next button, canGoForwardClicked is called
         pageViewerFragment.canGoForwardClicked();
+        fragments.get(pagerFragment.getCurrentPage()).canGoForwardClicked();
+        if (pageListFragment != null) {
+            pageListFragment.setChange();
+        } else {
+        setTitle(fragments.get(pagerFragment.getCurrentPage()).getPageText());
+        }
     }
 
     @Override
@@ -186,7 +155,6 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         pageControlFragment.updateURL(url);
     }
 
-    //TODO activity should display as its title, the page title of the current webpage
     @Override
     public void changeURLTitle(String urlTitle) {
         getSupportActionBar().setTitle((CharSequence) webPageTitles);
@@ -200,28 +168,29 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
     @Override
     public void newPageClicked() {
         pageViewerFragment.anotherPage();
-    }
-
-    @Override
-    public void sendList(ListView listView) {
-        listView.setAdapter(PageListAdapter);
-        listView.getAdapter();
-    }
-
-    @Override
-    public void itemSelected(int item, ArrayList<PageViewerFragment> pageViewerFragmentArrayList) {
-        if (landscape) {
-            pageViewerFragment.listPage();
+        fragments.add(new PageViewerFragment());
+        pagerFragment.setChange();
+        if (pageListFragment != null) {
+            pageListFragment.setChange();
+        } else {
+        pagerFragment.getNewPage(fragments.size() -1);
+        setTitle(fragments.get(pagerFragment.getCurrentPage()).getPageText());
         }
     }
 
     @Override
-    public void getItem(int position) {
-        if (landscape) {
-            pageViewerFragment.listPage();
+    public void onTabSelected(int position) {
+        pagerFragment.onTabSelected(position);
+        pagerFragment.getNewPage(position);
+        if (pageListFragment != null) {
+            pageListFragment.setChange();
+        } else {
+        setTitle(fragments.get(pagerFragment.getCurrentPage()).getPageText());
         }
+    }
+
+    @Override
+    public ArrayList<PageViewerFragment> getItem() {
+            return fragments;
     }
 }
-
-//TODO activity should display current URL as its title and update with each URL
-//TODO fix pagerViewer
