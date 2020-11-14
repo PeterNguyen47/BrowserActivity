@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.annotation.NonNull;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,21 +18,13 @@ import android.widget.Toast;
 
 import java.net.URL;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.Objects;
 
 public class PageViewerFragment extends Fragment {
 
     View l;
     Context context;
     WebView webView;
-    URL url;
     webPageInterface parentActivity;
-
-    ArrayList<PageViewerFragment> pages;
-    PagerFragment pagerFragment;
-    PageListFragment pageListFragment;
-    PageControlFragment pageControlFragment;
 
     public PageViewerFragment() {
     }
@@ -53,21 +46,21 @@ public class PageViewerFragment extends Fragment {
         super.onSaveInstanceState(outState);
         webView.saveState(outState);
     }
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         l = inflater.inflate(R.layout.fragment_page_viewer, container, false);
 
+        context = l.getContext();
+
+        //urlEditText = l.findViewById(R.id.urlEditText);
         webView = l.findViewById(R.id.webView);
 
-        // Getting links to open in webView fragment
+        // Getting links to open in webView
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
@@ -84,11 +77,13 @@ public class PageViewerFragment extends Fragment {
         // Enable Javascript
         webView.getSettings().setJavaScriptEnabled(true);
 
-        if (savedInstanceState == null) {
+        if(null == savedInstanceState) {
             webView.loadUrl(getString(R.string.home));
         } else {
             webView.restoreState(savedInstanceState);
         }
+
+
         return l;
     }
 
@@ -98,22 +93,12 @@ public class PageViewerFragment extends Fragment {
             urlInput = ("https://" + urlInput);
         }
         try {
-            url = new URL(urlInput);
+            URL url = new URL(urlInput);
             webView.loadUrl(url.toString());
         }
         catch (MalformedURLException e) {
             Toast.makeText(context, "URL is Invalid", Toast.LENGTH_SHORT).show();
         }
-        pages.get(pagerFragment.getCurrentPage()).anotherPage();
-        pagerFragment.setChange();
-        if (pageListFragment != null) {
-            pageListFragment.setChange();
-        }
-        pageControlFragment.getText(pages.get(pagerFragment.getCurrentPage()).getWebPage());
-    }
-
-    int getWebPage() {
-        return Integer.parseInt(Objects.requireNonNull(webView.getUrl()));
     }
 
     // Conditions when Back button is clicked
@@ -136,24 +121,7 @@ public class PageViewerFragment extends Fragment {
         }
     }
 
-    // Conditions when new page button is clicked
-    public void anotherPage() {
-        webView.loadUrl(getString(R.string.home));
-    }
-
-    // conditions when a URL in the listView is clicked
-    public void listPage() {
-        webView.loadUrl(url.toString());
-    }
-
-    public String getPageText(){
-        return webView.getTitle();
-    }
-
-    // interface to talk to fragment
-    public interface webPageInterface {
+    interface webPageInterface {
         void updatePage(String url);
-        void changeURLTitle(String urlTitle);
-        void countPage(String pageTitles);
     }
 }

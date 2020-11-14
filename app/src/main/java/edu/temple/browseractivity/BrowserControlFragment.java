@@ -19,7 +19,7 @@ public class BrowserControlFragment extends Fragment {
     Context context;
 
     ImageButton newPageBtn;
-    webPageInterface parentActivity;
+    browserInterface parentActivity;
 
     public BrowserControlFragment() {
         // Required empty public constructor
@@ -28,8 +28,8 @@ public class BrowserControlFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof webPageInterface) {
-            parentActivity = (webPageInterface) context;
+        if (context instanceof browserInterface) {
+            parentActivity = (browserInterface) context;
         } else {
             throw new RuntimeException(String.valueOf(R.string.runTimeException_browser_control));
         }
@@ -55,8 +55,6 @@ public class BrowserControlFragment extends Fragment {
 
         newPageBtn = l.findViewById(R.id.newPageBtn);
 
-        context = l.getContext();
-
         // Listener for new page button
         newPageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +67,7 @@ public class BrowserControlFragment extends Fragment {
     }
 
     // interface for fragment to talk to activity
-    interface webPageInterface {
+    interface browserInterface {
         void newPageClicked();
     }
 }

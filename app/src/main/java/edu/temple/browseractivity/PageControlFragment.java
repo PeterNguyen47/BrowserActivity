@@ -2,8 +2,11 @@ package edu.temple.browseractivity;
 
 import android.content.Context;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,9 +17,12 @@ import android.widget.ImageButton;
 public class PageControlFragment extends Fragment {
 
     View l;
+    Context context;
 
     EditText urlEditText;
-    ImageButton goBtn, backBtn, nextBtn;
+    ImageButton goBtn;
+    ImageButton backBtn;
+    ImageButton nextBtn;
 
     webPageInterface parentActivity;
 
@@ -34,19 +40,14 @@ public class PageControlFragment extends Fragment {
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setRetainInstance(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         l = inflater.inflate(R.layout.fragment_page_control, container, false);
 
@@ -54,6 +55,8 @@ public class PageControlFragment extends Fragment {
         backBtn = l.findViewById(R.id.backBtn);
         nextBtn = l.findViewById(R.id.nextBtn);
         urlEditText = l.findViewById(R.id.urlEditText);
+
+        context = l.getContext();
 
         // Listeners set for each button's functionality
         goBtn.setOnClickListener(new View.OnClickListener() {
@@ -93,8 +96,7 @@ public class PageControlFragment extends Fragment {
 
     interface webPageInterface {
         void goClicked();
-        void nextClicked();
         void backClicked();
-        void setWebURL();
+        void nextClicked();
     }
 }
