@@ -11,6 +11,5 @@
     <string name="runTimeException_browser_control">Please implement webPageInterface to attach BrowserControl Fragment</string>
     <string name="runTimeException_page_list">Please implement webPageInterface to attach PageList Fragment</string>
     <string name="runTimeException_pagerView">Please implement webPageInterface to attach PagerViewer Fragment</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="google">https://www.google.com</string>
 </resources>

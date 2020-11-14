@@ -2,101 +2,94 @@ package edu.temple.browseractivity;
 
 import android.content.Context;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageButton;
+
+import java.util.Objects;
 
 public class PageControlFragment extends Fragment {
 
+    private static final String KEY = "key";
+
     View l;
-    Context context;
 
-    EditText urlEditText;
-    ImageButton goBtn;
-    ImageButton backBtn;
-    ImageButton nextBtn;
+    EditText editTextURL;
 
-    webPageInterface parentActivity;
+    ControlInterface parentActivity;
 
     public PageControlFragment() {
+        // Required empty public constructor
     }
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof webPageInterface) {
-            parentActivity = (webPageInterface) context;
+        if (context instanceof ControlInterface) {
+            parentActivity = (ControlInterface) context;
         } else {
-            throw new RuntimeException(String.valueOf(R.string.runTimeException_control));
+            throw new RuntimeException(getString(R.string.runTimeException_control));
         }
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putString(KEY, editTextURL.getText().toString());
+        super.onSaveInstanceState(outState);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        // Inflate the layout for this fragment
         l = inflater.inflate(R.layout.fragment_page_control, container, false);
 
-        goBtn = l.findViewById(R.id.goBtn);
-        backBtn = l.findViewById(R.id.backBtn);
-        nextBtn = l.findViewById(R.id.nextBtn);
-        urlEditText = l.findViewById(R.id.urlEditText);
+        editTextURL = l.findViewById(R.id.urlEditText);
 
-        context = l.getContext();
-
-        // Listeners set for each button's functionality
-        goBtn.setOnClickListener(new View.OnClickListener() {
+        l.findViewById(R.id.goBtn).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                parentActivity.goClicked();
-                Log.d("Clicks", "Go is clicked: " + (parentActivity != null));
-                Log.d("Click Go", "URL updated to: " + urlEditText.getText());
+            public void onClick(View view) {
+                ((ControlInterface) Objects.requireNonNull(getActivity())).goClicked(editTextURL.getText().toString());
             }
         });
 
-        backBtn.setOnClickListener(new View.OnClickListener() {
+        l.findViewById(R.id.backBtn).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                parentActivity.backClicked();
-                Log.d("Clicks", "Back is clicked: " + (parentActivity != null));
-                Log.d("Click Back", "URL updated to: " + urlEditText.getText());
+            public void onClick(View view) {
+                ((ControlInterface) Objects.requireNonNull(getActivity())).backClicked();
             }
         });
 
-        nextBtn.setOnClickListener(new View.OnClickListener() {
+        l.findViewById(R.id.nextBtn).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                parentActivity.nextClicked();
-                Log.d("Clicks", "Next is clicked: " + (parentActivity != null));
-                Log.d("Click Next", "URL updated to: " + urlEditText.getText());
+            public void onClick(View view) {
+                ((ControlInterface) Objects.requireNonNull(getActivity())).nextClicked();
             }
         });
-
         return l;
     }
 
-    // Method to update URL in urlEditText (search bar)
-    public void updateURL(String url) {
-        urlEditText.setText(url);
+    //setter
+    public void setText(String link){
+        if (editTextURL != null) {
+            editTextURL.setText(link);
+        }
     }
 
-    interface webPageInterface {
-        void goClicked();
+    interface ControlInterface {
+        void goClicked(String URL);
         void backClicked();
         void nextClicked();
+        void setURL();
     }
 }

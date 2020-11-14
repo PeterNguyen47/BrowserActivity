@@ -1,25 +1,21 @@
 package edu.temple.browseractivity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import java.util.Objects;
 
 public class BrowserControlFragment extends Fragment {
 
-    View l;
-    Context context;
+    private static final String KEY = "key";
 
-    ImageButton newPageBtn;
-    browserInterface parentActivity;
+    View l;
+
+    BrowserInterface parentActivity;
 
     public BrowserControlFragment() {
         // Required empty public constructor
@@ -28,11 +24,20 @@ public class BrowserControlFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof browserInterface) {
-            parentActivity = (browserInterface) context;
+        if (context instanceof BrowserInterface) {
+            parentActivity = (BrowserInterface) context;
         } else {
             throw new RuntimeException(String.valueOf(R.string.runTimeException_browser_control));
         }
+    }
+
+    public static BrowserControlFragment newInstance(String fragmentId) {
+        BrowserControlFragment fragment = new BrowserControlFragment();
+        Bundle args = new Bundle();
+        args.putString(KEY, fragmentId);
+        fragment.setArguments(args);
+
+        return fragment;
     }
 
     @Override
@@ -53,21 +58,16 @@ public class BrowserControlFragment extends Fragment {
         // Inflate the layout for this fragment
         l = inflater.inflate(R.layout.fragment_browser_control, container, false);
 
-        newPageBtn = l.findViewById(R.id.newPageBtn);
-
-        // Listener for new page button
-        newPageBtn.setOnClickListener(new View.OnClickListener() {
+        l.findViewById(R.id.newPageBtn).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-            parentActivity.newPageClicked();
-            Log.d("New Page","newPageBtn clicked: " + (parentActivity != null));
+            public void onClick(View view) {
+                ((BrowserInterface) Objects.requireNonNull(getActivity())).newPageClicked();
             }
         });
         return l;
     }
 
-    // interface for fragment to talk to activity
-    interface browserInterface {
+    interface BrowserInterface {
         void newPageClicked();
     }
 }

@@ -3,42 +3,62 @@ package edu.temple.browseractivity;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.annotation.NonNull;
-
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebResourceRequest;
-import android.webkit.WebViewClient;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Toast;
+import java.util.Objects;
 
-import java.net.URL;
-import java.net.MalformedURLException;
-
-public class PageViewerFragment extends Fragment {
+public class PageViewerFragment extends Fragment implements Parcelable {
 
     View l;
     Context context;
     WebView webView;
-    webPageInterface parentActivity;
 
     public PageViewerFragment() {
     }
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
+    public PageViewerFragment(Parcel in) {
+        webView.restoreState(Objects.requireNonNull(in.readBundle(getClass().getClassLoader())));
+    }
 
-        if (context instanceof webPageInterface) {
-            parentActivity = (webPageInterface) context;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        Bundle args = new Bundle();
+        webView.saveState(args);
+        dest.writeBundle(args);
+    }
+
+    public static final Parcelable.Creator CREATOR = new Creator<PageViewerFragment>() {
+        @Override
+        public PageViewerFragment createFromParcel(Parcel in) {
+            return new PageViewerFragment(in);
         }
-        else {
-            throw new RuntimeException(String.valueOf(R.string.runTimeException_view));
+
+        @Override
+        public PageViewerFragment[] newArray(int size) {
+            return new PageViewerFragment[size];
         }
+    };
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
     }
 
     @Override
@@ -46,74 +66,57 @@ public class PageViewerFragment extends Fragment {
         super.onSaveInstanceState(outState);
         webView.saveState(outState);
     }
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState == null) {
+            webView.loadUrl(getString(R.string.google));
+        } else {
+            webView.restoreState(savedInstanceState);
+        }
+    }
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        // Inflate the layout for this fragment
         l = inflater.inflate(R.layout.fragment_page_viewer, container, false);
 
-        context = l.getContext();
-
-        //urlEditText = l.findViewById(R.id.urlEditText);
         webView = l.findViewById(R.id.webView);
-
-        // Getting links to open in webView
-        webView.setWebViewClient(new WebViewClient() {
+        webView.setWebViewClient(new WebViewClient(){
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 return super.shouldOverrideUrlLoading(view, request);
             }
 
             @Override
-            public void onPageFinished(WebView webView, String url) {
-                super.onPageFinished(webView, url);
-                parentActivity.updatePage(url);
+            public void onPageFinished(WebView view, String url) {
+                ((PageControlFragment.ControlInterface) context).setURL();
             }
         });
 
         // Enable Javascript
         webView.getSettings().setJavaScriptEnabled(true);
 
-        if(null == savedInstanceState) {
+        if (savedInstanceState == null) {
             webView.loadUrl(getString(R.string.home));
         } else {
             webView.restoreState(savedInstanceState);
         }
-
-
         return l;
     }
 
-    // When a new URL is searched, URL is automatically corrected if needed
-    public void newPage(String urlInput) {
-        if (!(urlInput.startsWith("https://") || urlInput.startsWith("http://"))) {
-            urlInput = ("https://" + urlInput);
-        }
-        try {
-            URL url = new URL(urlInput);
-            webView.loadUrl(url.toString());
-        }
-        catch (MalformedURLException e) {
-            Toast.makeText(context, "URL is Invalid", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    // Conditions when Back button is clicked
-    public void canGoBackClicked() {
-        if (webView.canGoBack()) {
+    public void canGoBackClicked(){
+        if(webView.canGoBack()){
             webView.goBack();
         }
-        else {
+        else if (context != null) {
             Toast.makeText(context, "No Previous History", Toast.LENGTH_SHORT).show();
         }
     }
 
-    // Conditions when Next button is clicked
-    public void canGoForwardClicked() {
-        if (webView.canGoForward()) {
+    public void canGoForwardClicked(){
+        if(webView.canGoForward()){
             webView.goForward();
         }
         else {
@@ -121,7 +124,27 @@ public class PageViewerFragment extends Fragment {
         }
     }
 
-    interface webPageInterface {
-        void updatePage(String url);
+    // setters and getters
+    public void setLink(String link) {
+        webView.loadUrl(link);
+    }
+
+    public String getURL(){
+        return webView.getUrl();
+    }
+
+    public String getPageName(){
+        return webView.getTitle();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        this.context = null;
     }
 }

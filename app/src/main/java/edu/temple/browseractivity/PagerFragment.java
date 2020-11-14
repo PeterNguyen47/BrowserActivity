@@ -1,64 +1,84 @@
 package edu.temple.browseractivity;
 
 import android.os.Bundle;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
+import androidx.viewpager.widget.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import java.util.ArrayList;
+import java.util.Objects;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link PagerFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class PagerFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    View l;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    ViewPager viewPager;
+
+    PageAdapter pageAdapter;
 
     public PagerFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment PagerFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static PagerFragment newInstance(String param1, String param2) {
-        PagerFragment fragment = new PagerFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_pager, container, false);
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        l = inflater.inflate(R.layout.fragment_pager, container, false);
+
+        assert getFragmentManager() != null;
+        pageAdapter = new PageAdapter(getFragmentManager(), ((pagerInterface) getActivity()).getPages());
+
+        viewPager = l.findViewById(R.id.viewPager);
+        viewPager.setAdapter(pageAdapter);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                ((PageControlFragment.ControlInterface) Objects.requireNonNull(getActivity())).setURL();
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                ((PageControlFragment.ControlInterface) Objects.requireNonNull(getActivity())).setURL();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                ((PageControlFragment.ControlInterface) Objects.requireNonNull(getActivity())).setURL();
+            }
+        });
+        return l;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setNotification();
+    }
+
+    public void setPage(int num){
+        viewPager.setCurrentItem(num);
+    }
+
+    public void setNotification(){
+        pageAdapter.notifyDataSetChanged();
+    }
+
+    public int getPage(){
+        return viewPager.getCurrentItem();
+    }
+
+    interface pagerInterface {
+        ArrayList<PageViewerFragment> getPages();
     }
 }
