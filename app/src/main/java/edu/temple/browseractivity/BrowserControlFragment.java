@@ -7,11 +7,15 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
 import java.util.Objects;
 
 public class BrowserControlFragment extends Fragment {
 
     private static final String KEY = "key";
+
+    Context context;
 
     View l;
 
@@ -64,10 +68,39 @@ public class BrowserControlFragment extends Fragment {
                 ((BrowserInterface) Objects.requireNonNull(getActivity())).newPageClicked();
             }
         });
+
+
+
+
+        l.findViewById(R.id.saveBookMarkBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO Current URL should be saved into a list
+                //TODO Have URLs saved even when exiting application and reopening
+                ((BrowserInterface) Objects.requireNonNull(getActivity())).saveBookMarkClicked();
+            }
+        });
+
+        l.findViewById(R.id.bookmarkBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO Launch BookMarkActivity to show a list of saved URL names
+                //TODO Clicking an item on list of URL names takes user to that URL in PageViewerFragment
+                //TODO Each listed URL name has a trashcan to delete URL
+            }
+        });
+
+
+
+
+
         return l;
     }
 
     interface BrowserInterface {
         void newPageClicked();
+
+        void saveBookMarkClicked();
+        void bookMarkClicked();
     }
 }

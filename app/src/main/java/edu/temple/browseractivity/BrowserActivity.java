@@ -6,6 +6,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 
 public class BrowserActivity extends AppCompatActivity implements BrowserControlFragment.BrowserInterface,
@@ -91,7 +93,6 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
         if (pageListFragment != null) {
             pageListFragment.setNotificationChange();
         }
-
         pageControlFragment.setText(fragments.get(pagerFragment.getPage()).getURL());
     }
 
@@ -123,6 +124,18 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
         pagerFragment.setPage(fragments.size());
         setTitle(fragments.get(pagerFragment.getPage()).getPageName());
     }
+
+    //TODO when user clicks bookmark button, a new screen opens up to show list of bookmarks
+    @Override
+    public void bookMarkClicked() {
+
+    }
+
+    @Override
+    public void saveBookMarkClicked() {
+        Toast.makeText(this, R.string.saveBookMarkClick, Toast.LENGTH_SHORT).show();
+    }
+
 
     @Override
     public void setURL() {

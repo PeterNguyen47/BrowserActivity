@@ -23,6 +23,8 @@ public class PageViewerFragment extends Fragment implements Parcelable {
     Context context;
     WebView webView;
 
+    PageViewInterface parentActivity;
+
     public PageViewerFragment() {
     }
 
@@ -79,7 +81,7 @@ public class PageViewerFragment extends Fragment implements Parcelable {
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             final Bundle savedInstanceState) {
         l = inflater.inflate(R.layout.fragment_page_viewer, container, false);
 
         webView = l.findViewById(R.id.webView);
@@ -91,7 +93,12 @@ public class PageViewerFragment extends Fragment implements Parcelable {
 
             @Override
             public void onPageFinished(WebView view, String url) {
+                if (view == null) {
                 ((PageControlFragment.ControlInterface) context).setURL();
+                } else {
+                    webView.getOriginalUrl();
+                }
+
             }
         });
 
@@ -110,7 +117,7 @@ public class PageViewerFragment extends Fragment implements Parcelable {
         if(webView.canGoBack()){
             webView.goBack();
         }
-        else if (context != null) {
+        else {
             Toast.makeText(context, "No Previous History", Toast.LENGTH_SHORT).show();
         }
     }
@@ -146,5 +153,9 @@ public class PageViewerFragment extends Fragment implements Parcelable {
     public void onDetach() {
         super.onDetach();
         this.context = null;
+    }
+
+    interface PageViewInterface {
+        void bookMarkClicked();
     }
 }

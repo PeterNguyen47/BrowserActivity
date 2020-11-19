@@ -12,4 +12,10 @@
     <string name="runTimeException_page_list">Please implement webPageInterface to attach PageList Fragment</string>
     <string name="runTimeException_pagerView">Please implement webPageInterface to attach PagerViewer Fragment</string>
     <string name="google">https://www.google.com</string>
+    <string name="bookmark">Bookmark</string>
+    <string name="saveBookMark">Save</string>
+    <string name="deleteBtn">Delete</string>
+    <string name="saveBookMarkClick">Bookmark saved</string>
+    <string name="deleteMsg">Are you sure you want to delete?</string>
+    <string name="close">Close Bookmark</string>
 </resources>
