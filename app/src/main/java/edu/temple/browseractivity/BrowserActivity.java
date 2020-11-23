@@ -4,16 +4,21 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.widget.BaseAdapter;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class BrowserActivity extends AppCompatActivity implements BrowserControlFragment.BrowserInterface,
         PageControlFragment.ControlInterface,
         PageListFragment.listInterface,
-        PagerFragment.pagerInterface {
+        PagerFragment.pagerInterface,
+        BrowserControlFragment.BookMarkInterface{
 
     private static final String KEY = "key";
 
@@ -23,10 +28,22 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
     PagerFragment pagerFragment;
 
     ArrayList<PageViewerFragment> fragments;
+
+    ArrayList<ArrayList<String>> pageName;
+    ArrayList<String> bookedPageName;
+    ArrayList<String> url;
+
+    BaseAdapter BookMarkListAdapter;
+    PageAdapter pageAdapter;
+
     FragmentManager fm;
     FragmentTransaction ft;
 
     int orientation;
+    String name;
+
+    SharedPreferences preferences;
+    File file;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +55,7 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
 
         orientation = getResources().getConfiguration().orientation;
 
-        if (fm.findFragmentById(R.id.page_control) == null && fm.findFragmentById(R.id.page_display) == null) {
+        if ((fm.findFragmentById(R.id.page_control) == null && fm.findFragmentById(R.id.page_display) == null)) {
             browserControlFragment = new BrowserControlFragment();
             pageControlFragment = new PageControlFragment();
             pagerFragment = new PagerFragment();
@@ -56,8 +73,7 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
             }
             ft.commit();
 
-        }
-        else {
+        } else {
             fragments = savedInstanceState.getParcelableArrayList(KEY);
 
             pageControlFragment = (PageControlFragment) fm.findFragmentById(R.id.page_control);
@@ -68,12 +84,12 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
                 pageListFragment = new PageListFragment();
                 ft.add(R.id.page_list, pageListFragment);
                 ft.commit();
-            }
-            else {
+            } else {
                 pageListFragment = (PageListFragment) fm.findFragmentById(R.id.page_list);
             }
         }
     }
+
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
@@ -128,27 +144,38 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
     //TODO when user clicks bookmark button, a new screen opens up to show list of bookmarks
     @Override
     public void bookMarkClicked() {
-
     }
 
     @Override
     public void saveBookMarkClicked() {
         Toast.makeText(this, R.string.saveBookMarkClick, Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void setBookedPage() {
+        //pageName.add(bookedPageName);
     }
 
 
     @Override
     public void setURL() {
         pageControlFragment.setText(fragments.get(pagerFragment.getPage()).getURL());
-        if(pageListFragment !=null) pageListFragment.setNotificationChange();
+        if (pageListFragment !=null) {
+            pageListFragment.setNotificationChange();
+        }
         setTitle(fragments.get(pagerFragment.getPage()).getPageName());
     }
 
     public void getPage(int reference){
         pagerFragment.setPage(reference);
-        if(pageListFragment !=null) pageListFragment.setNotificationChange();
+        if (pageListFragment !=null) {
+            pageListFragment.setNotificationChange();
+        }
         setTitle(fragments.get(pagerFragment.getPage()).getPageName());
     }
+
+
 
     @Override
     public ArrayList<PageViewerFragment> getPages() {

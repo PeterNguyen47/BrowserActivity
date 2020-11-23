@@ -1,34 +1,34 @@
 package edu.temple.browseractivity;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import androidx.fragment.app.FragmentManager;
-
 import java.util.ArrayList;
 
-public class ListAdapter extends BaseAdapter{
-
+public class BookMarkListAdapter extends BaseAdapter {
     Context context;
     TextView textView;
-    ArrayList<PageViewerFragment> list;
+    ArrayList<String> bookMarkedPage;
 
-    public ListAdapter(Context context, ArrayList<PageViewerFragment> list) {
+    public BookMarkListAdapter(Context context, ArrayList<String> bookMarkedPage) {
         this.context = context;
-        this.list = list;
+        this.bookMarkedPage = bookMarkedPage;
     }
 
     @Override
     public int getCount() {
-        return list.size();
+        return bookMarkedPage.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return list.get(position);
+        return bookMarkedPage.get(position);
     }
 
     @Override
@@ -37,14 +37,15 @@ public class ListAdapter extends BaseAdapter{
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             textView = new TextView(context);
         } else {
             textView = (TextView) convertView;
         }
-        textView.setText(list.get(position).getPageName());
 
-        return textView;
+        textView.setText(bookMarkedPage.get(position));
+
+        return convertView;
     }
 }

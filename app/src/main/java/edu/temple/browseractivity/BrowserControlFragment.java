@@ -1,13 +1,13 @@
 package edu.temple.browseractivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.Objects;
 
@@ -15,11 +15,12 @@ public class BrowserControlFragment extends Fragment {
 
     private static final String KEY = "key";
 
-    Context context;
-
     View l;
+    Context context;
+    Intent intent;
 
-    BrowserInterface parentActivity;
+    BrowserInterface browserInterface;
+    BookMarkInterface bookMarkInterface;
 
     public BrowserControlFragment() {
         // Required empty public constructor
@@ -29,19 +30,10 @@ public class BrowserControlFragment extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         if (context instanceof BrowserInterface) {
-            parentActivity = (BrowserInterface) context;
+            browserInterface = (BrowserInterface) context;
         } else {
             throw new RuntimeException(String.valueOf(R.string.runTimeException_browser_control));
         }
-    }
-
-    public static BrowserControlFragment newInstance(String fragmentId) {
-        BrowserControlFragment fragment = new BrowserControlFragment();
-        Bundle args = new Bundle();
-        args.putString(KEY, fragmentId);
-        fragment.setArguments(args);
-
-        return fragment;
     }
 
     @Override
@@ -75,11 +67,15 @@ public class BrowserControlFragment extends Fragment {
         l.findViewById(R.id.saveBookMarkBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO Current URL should be saved into a list
+                //TODO Current URL should be saved into a BookMarkActivity listView
                 //TODO Have URLs saved even when exiting application and reopening
-                ((BrowserInterface) Objects.requireNonNull(getActivity())).saveBookMarkClicked();
+                ((BookMarkInterface) Objects.requireNonNull(getActivity())).saveBookMarkClicked();
+                //bookMarkInterface.setBookedPage();
             }
         });
+
+
+
 
         l.findViewById(R.id.bookmarkBtn).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,6 +83,7 @@ public class BrowserControlFragment extends Fragment {
                 //TODO Launch BookMarkActivity to show a list of saved URL names
                 //TODO Clicking an item on list of URL names takes user to that URL in PageViewerFragment
                 //TODO Each listed URL name has a trashcan to delete URL
+
             }
         });
 
@@ -99,8 +96,11 @@ public class BrowserControlFragment extends Fragment {
 
     interface BrowserInterface {
         void newPageClicked();
+    }
 
+    interface BookMarkInterface {
         void saveBookMarkClicked();
+        void setBookedPage();
         void bookMarkClicked();
     }
 }

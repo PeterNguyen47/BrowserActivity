@@ -26,7 +26,7 @@ public class PageListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        l =inflater.inflate(R.layout.fragment_page_list, container, false);
+        l = inflater.inflate(R.layout.fragment_page_list, container, false);
 
         listView = l.findViewById(R.id.listView);
         listAdapter = new ListAdapter(getContext(), ((PagerFragment.pagerInterface) getActivity()).getPages());

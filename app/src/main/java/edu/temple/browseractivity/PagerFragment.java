@@ -36,7 +36,6 @@ public class PagerFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         l = inflater.inflate(R.layout.fragment_pager, container, false);
 
-        assert getFragmentManager() != null;
         pageAdapter = new PageAdapter(getFragmentManager(), ((pagerInterface) getActivity()).getPages());
 
         viewPager = l.findViewById(R.id.viewPager);
