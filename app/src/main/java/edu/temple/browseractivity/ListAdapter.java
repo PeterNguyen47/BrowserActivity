@@ -6,20 +6,22 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import androidx.fragment.app.FragmentManager;
-
 import java.util.ArrayList;
 
-public class ListAdapter extends BaseAdapter{
+import edu.temple.browseractivity.PageViewerFragment;
+
+public class ListAdapter extends BaseAdapter implements android.widget.ListAdapter {
 
     Context context;
     TextView textView;
     ArrayList<PageViewerFragment> list;
 
+
     public ListAdapter(Context context, ArrayList<PageViewerFragment> list) {
         this.context = context;
         this.list = list;
     }
+
 
     @Override
     public int getCount() {
@@ -27,12 +29,12 @@ public class ListAdapter extends BaseAdapter{
     }
 
     @Override
-    public Object getItem(int position) {
-        return list.get(position);
+    public Object getItem(int i) {
+        return list.get(i);
     }
 
     @Override
-    public long getItemId(int position) {
+    public long getItemId(int i) {
         return 0;
     }
 
@@ -47,4 +49,5 @@ public class ListAdapter extends BaseAdapter{
 
         return textView;
     }
+
 }

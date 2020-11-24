@@ -1,12 +1,18 @@
 package edu.temple.browseractivity;
 
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import edu.temple.browseractivity.PagerFragment;
+import edu.temple.browseractivity.R;
+
 
 public class PageListFragment extends Fragment {
 
@@ -26,7 +32,7 @@ public class PageListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        l = inflater.inflate(R.layout.fragment_page_list, container, false);
+        l =inflater.inflate(R.layout.fragment_page_list, container, false);
 
         listView = l.findViewById(R.id.listView);
         listAdapter = new ListAdapter(getContext(), ((PagerFragment.pagerInterface) getActivity()).getPages());
@@ -34,7 +40,7 @@ public class PageListFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                ((listInterface) getActivity()).getPage(position);
+                ((ListInterface) getActivity()).getPage(position);
             }
         });
 
@@ -47,7 +53,7 @@ public class PageListFragment extends Fragment {
         }
     }
 
-    interface listInterface {
+    interface ListInterface {
         void getPage(int reference);
     }
 }

@@ -8,8 +8,14 @@ import androidx.viewpager.widget.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import java.util.ArrayList;
-import java.util.Objects;
+
+import edu.temple.browseractivity.PageAdapter;
+import edu.temple.browseractivity.PageControlFragment;
+import edu.temple.browseractivity.PageViewerFragment;
+import edu.temple.browseractivity.R;
+
 
 public class PagerFragment extends Fragment {
 
@@ -43,17 +49,17 @@ public class PagerFragment extends Fragment {
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                ((PageControlFragment.ControlInterface) Objects.requireNonNull(getActivity())).setURL();
+                ((PageControlFragment.ControlInterface) getContext()).setURL();
             }
 
             @Override
             public void onPageSelected(int position) {
-                ((PageControlFragment.ControlInterface) Objects.requireNonNull(getActivity())).setURL();
+                ((PageControlFragment.ControlInterface) getContext()).setURL();
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                ((PageControlFragment.ControlInterface) Objects.requireNonNull(getActivity())).setURL();
+                ((PageControlFragment.ControlInterface) getContext()).setURL();
             }
         });
         return l;
@@ -65,13 +71,14 @@ public class PagerFragment extends Fragment {
         setNotification();
     }
 
-    public void setPage(int num){
-        viewPager.setCurrentItem(num);
+    public void setPage(int index){
+        viewPager.setCurrentItem(index);
     }
 
     public void setNotification(){
         pageAdapter.notifyDataSetChanged();
     }
+
 
     public int getPage(){
         return viewPager.getCurrentItem();

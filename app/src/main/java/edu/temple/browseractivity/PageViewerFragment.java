@@ -2,6 +2,7 @@ package edu.temple.browseractivity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,8 +23,6 @@ public class PageViewerFragment extends Fragment implements Parcelable {
     View l;
     Context context;
     WebView webView;
-
-    PageViewInterface parentActivity;
 
     public PageViewerFragment() {
     }
@@ -68,11 +67,12 @@ public class PageViewerFragment extends Fragment implements Parcelable {
         super.onSaveInstanceState(outState);
         webView.saveState(outState);
     }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState == null) {
-            webView.loadUrl(getString(R.string.google));
+            webView.loadUrl(getString(R.string.home));
         } else {
             webView.restoreState(savedInstanceState);
         }
@@ -80,11 +80,21 @@ public class PageViewerFragment extends Fragment implements Parcelable {
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             final Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
         l = inflater.inflate(R.layout.fragment_page_viewer, container, false);
 
         webView = l.findViewById(R.id.webView);
+
+        // Enable Javascript
+        webView.getSettings().setJavaScriptEnabled(true);
+        if (savedInstanceState == null) {
+            webView.loadUrl(getString(R.string.home));
+        } else {
+            webView.restoreState(savedInstanceState);
+        }
+
         webView.setWebViewClient(new WebViewClient(){
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
@@ -92,48 +102,38 @@ public class PageViewerFragment extends Fragment implements Parcelable {
             }
 
             @Override
-            public void onPageFinished(WebView view, String url) {
-                if (view == null) {
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
                 ((PageControlFragment.ControlInterface) context).setURL();
-                } else {
-                    webView.getOriginalUrl();
-                }
+            }
 
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                ((PageControlFragment.ControlInterface) context).setURL();
             }
         });
-
-        // Enable Javascript
-        webView.getSettings().setJavaScriptEnabled(true);
-
-        if (savedInstanceState == null) {
-            webView.loadUrl(getString(R.string.home));
-        } else {
-            webView.restoreState(savedInstanceState);
-        }
         return l;
     }
 
     public void canGoBackClicked(){
-        if(webView.canGoBack()){
+        if (webView.canGoBack()) {
             webView.goBack();
-        }
-        else {
+        } else {
             Toast.makeText(context, "No Previous History", Toast.LENGTH_SHORT).show();
         }
     }
 
     public void canGoForwardClicked(){
-        if(webView.canGoForward()){
+        if (webView.canGoForward()) {
             webView.goForward();
-        }
-        else {
+        } else {
             Toast.makeText(context, "Future is not yet written", Toast.LENGTH_SHORT).show();
         }
     }
 
-    // setters and getters
-    public void setLink(String link) {
-        webView.loadUrl(link);
+    // setters and getters for web page URL and name
+    public void setLink(String url) {
+        webView.loadUrl(url);
     }
 
     public String getURL(){
@@ -149,13 +149,4 @@ public class PageViewerFragment extends Fragment implements Parcelable {
         return 0;
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        this.context = null;
-    }
-
-    interface PageViewInterface {
-        void bookMarkClicked();
-    }
 }

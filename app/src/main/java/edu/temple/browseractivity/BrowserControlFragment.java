@@ -1,23 +1,24 @@
 package edu.temple.browseractivity;
 
 import android.content.Context;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.Objects;
 
+
 public class BrowserControlFragment extends Fragment {
 
-    private static final String KEY = "key";
-
     View l;
-    Context context;
-    Intent intent;
+
+    SharedPreferences preferences;
 
     BrowserInterface browserInterface;
     BookMarkInterface bookMarkInterface;
@@ -29,23 +30,18 @@ public class BrowserControlFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof BrowserInterface) {
+        if (context instanceof BrowserInterface && context instanceof BookMarkInterface) {
             browserInterface = (BrowserInterface) context;
+            bookMarkInterface = (BookMarkInterface) context;
         } else {
             throw new RuntimeException(String.valueOf(R.string.runTimeException_browser_control));
         }
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putAll(outState);
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setRetainInstance(true);
     }
 
     @Override
@@ -57,39 +53,23 @@ public class BrowserControlFragment extends Fragment {
         l.findViewById(R.id.newPageBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((BrowserInterface) Objects.requireNonNull(getActivity())).newPageClicked();
+                ((BrowserInterface) Objects.requireNonNull(getContext())).newPageClicked();
             }
         });
-
-
-
 
         l.findViewById(R.id.saveBookMarkBtn).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                //TODO Current URL should be saved into a BookMarkActivity listView
-                //TODO Have URLs saved even when exiting application and reopening
-                ((BookMarkInterface) Objects.requireNonNull(getActivity())).saveBookMarkClicked();
-                //bookMarkInterface.setBookedPage();
+            public void onClick(View view) {
+                ((BrowserControlFragment.BookMarkInterface) Objects.requireNonNull(getContext())).setBookedPage();
             }
         });
-
-
-
 
         l.findViewById(R.id.bookmarkBtn).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                //TODO Launch BookMarkActivity to show a list of saved URL names
-                //TODO Clicking an item on list of URL names takes user to that URL in PageViewerFragment
-                //TODO Each listed URL name has a trashcan to delete URL
-
+            public void onClick(View view) {
+                ((BookMarkInterface) Objects.requireNonNull(getContext())).showBookMarkFragment();
             }
         });
-
-
-
-
 
         return l;
     }
@@ -99,8 +79,7 @@ public class BrowserControlFragment extends Fragment {
     }
 
     interface BookMarkInterface {
-        void saveBookMarkClicked();
+        void showBookMarkFragment();
         void setBookedPage();
-        void bookMarkClicked();
     }
 }

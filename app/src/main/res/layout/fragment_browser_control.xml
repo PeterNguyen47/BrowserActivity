@@ -8,7 +8,7 @@
 
     <ImageButton
         android:id="@+id/newPageBtn"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_gravity="top|end"
         android:contentDescription="@string/newPage"
@@ -16,7 +16,7 @@
 
     <ImageButton
         android:id="@+id/bookmarkBtn"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_gravity="top|start"
         android:contentDescription="@string/bookmark"
@@ -24,9 +24,10 @@
 
     <ImageButton
         android:id="@+id/saveBookMarkBtn"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_gravity="top|center"
         android:contentDescription="@string/saveBookMark"
         android:src="@android:drawable/ic_menu_save" />
+
 </FrameLayout>

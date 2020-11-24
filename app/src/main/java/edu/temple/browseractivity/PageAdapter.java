@@ -4,7 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+
 import java.util.ArrayList;
+
+import edu.temple.browseractivity.PageViewerFragment;
 
 public class PageAdapter extends FragmentStatePagerAdapter {
 

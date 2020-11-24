@@ -5,20 +5,25 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.widget.BaseAdapter;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 
-public class BrowserActivity extends AppCompatActivity implements BrowserControlFragment.BrowserInterface,
-        PageControlFragment.ControlInterface,
-        PageListFragment.listInterface,
+public class BrowserActivity extends AppCompatActivity implements PageControlFragment.ControlInterface,
+        BrowserControlFragment.BrowserInterface,
         PagerFragment.pagerInterface,
-        BrowserControlFragment.BookMarkInterface{
+        PageListFragment.ListInterface,
+        BrowserControlFragment.BookMarkInterface {
 
     private static final String KEY = "key";
 
@@ -26,48 +31,45 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
     PageControlFragment pageControlFragment;
     PageListFragment pageListFragment;
     PagerFragment pagerFragment;
+    BookMarkFragment bookMarkFragment;
+
+    FrameLayout BookMarkView;
 
     ArrayList<PageViewerFragment> fragments;
-
-    ArrayList<ArrayList<String>> pageName;
-    ArrayList<String> bookedPageName;
-    ArrayList<String> url;
-
-    BaseAdapter BookMarkListAdapter;
-    PageAdapter pageAdapter;
 
     FragmentManager fm;
     FragmentTransaction ft;
 
-    int orientation;
-    String name;
-
     SharedPreferences preferences;
-    File file;
+    int orientation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        BookMarkView = findViewById(R.id.book_mark_view);
+
         fm = getSupportFragmentManager();
         ft = fm.beginTransaction();
 
         orientation = getResources().getConfiguration().orientation;
 
-        if ((fm.findFragmentById(R.id.page_control) == null && fm.findFragmentById(R.id.page_display) == null)) {
+        if (fm.findFragmentById(R.id.page_control) == null && fm.findFragmentById(R.id.page_display) == null){
             browserControlFragment = new BrowserControlFragment();
             pageControlFragment = new PageControlFragment();
             pagerFragment = new PagerFragment();
+            bookMarkFragment = new BookMarkFragment();
 
             fragments = new ArrayList<>();
             fragments.add(new PageViewerFragment());
 
-            ft.add(R.id.browser_control, browserControlFragment)
-                    .add(R.id.page_control, pageControlFragment)
-                    .add(R.id.page_display, pagerFragment);
+            ft.add(R.id.page_control, pageControlFragment)
+                    .add(R.id.browser_control, browserControlFragment)
+                    .add(R.id.page_display, pagerFragment)
+                    .add(R.id.book_mark_view, bookMarkFragment);
 
-            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if (orientation == Configuration.ORIENTATION_LANDSCAPE){
                 pageListFragment = new PageListFragment();
                 ft.add(R.id.page_list, pageListFragment);
             }
@@ -79,17 +81,17 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
             pageControlFragment = (PageControlFragment) fm.findFragmentById(R.id.page_control);
             browserControlFragment = (BrowserControlFragment) fm.findFragmentById(R.id.browser_control);
             pagerFragment = (PagerFragment) fm.findFragmentById(R.id.page_display);
+            bookMarkFragment = (BookMarkFragment) fm.findFragmentById(R.id.book_mark_view);
 
-            if (orientation == Configuration.ORIENTATION_LANDSCAPE && pageListFragment == null) {
+            if(orientation == Configuration.ORIENTATION_LANDSCAPE && pageListFragment == null) {
                 pageListFragment = new PageListFragment();
-                ft.add(R.id.page_list, pageListFragment);
-                ft.commit();
+                ft.add(R.id.page_list, pageListFragment)
+                        .commit();
             } else {
                 pageListFragment = (PageListFragment) fm.findFragmentById(R.id.page_list);
             }
         }
     }
-
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
@@ -97,18 +99,16 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
         outState.putParcelableArrayList(KEY, fragments);
     }
 
-    @Override
     public void goClicked(String urlInput){
-        if (!(urlInput.startsWith("https://") || urlInput.startsWith("http://"))) {
+        if (!urlInput.startsWith("https://") || urlInput.startsWith("http://")) {
             urlInput = ("https://" + urlInput);
-        }
-
-        fragments.get(pagerFragment.getPage()).setLink(urlInput);
-        pagerFragment.setNotification();
-
-        if (pageListFragment != null) {
+        } else if (pageListFragment != null) {
             pageListFragment.setNotificationChange();
         }
+
+        fragments.add(new PageViewerFragment());
+        fragments.get(pagerFragment.getPage()).setLink(urlInput);
+        pagerFragment.setNotification();
         pageControlFragment.setText(fragments.get(pagerFragment.getPage()).getURL());
     }
 
@@ -121,7 +121,6 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
         }
     }
 
-    @Override
     public void nextClicked() {
         fragments.get(pagerFragment.getPage()).canGoForwardClicked();
         setTitle(fragments.get(pagerFragment.getPage()).getPageName());
@@ -133,49 +132,48 @@ public class BrowserActivity extends AppCompatActivity implements BrowserControl
     @Override
     public void newPageClicked() {
         fragments.add(new PageViewerFragment());
+        setTitle(fragments.get(pagerFragment.getPage()).getPageName());
         pagerFragment.setNotification();
         if (pageListFragment != null) {
             pageListFragment.setNotificationChange();
         }
         pagerFragment.setPage(fragments.size());
+    }
+
+    @Override
+    public void setURL() {
+        pageControlFragment.setText(fragments.get(pagerFragment.getPage()).getURL());
         setTitle(fragments.get(pagerFragment.getPage()).getPageName());
+        if (pageListFragment != null) {
+            pageListFragment.setNotificationChange();
+        }
     }
 
-    //TODO when user clicks bookmark button, a new screen opens up to show list of bookmarks
-    @Override
-    public void bookMarkClicked() {
+    public void getPage(int reference){
+        pagerFragment.setPage(reference);
+        setTitle(fragments.get(pagerFragment.getPage()).getPageName());
+        if (pageListFragment != null) {
+            pageListFragment.setNotificationChange();
+        }
     }
 
     @Override
-    public void saveBookMarkClicked() {
-        Toast.makeText(this, R.string.saveBookMarkClick, Toast.LENGTH_SHORT).show();
+    public void showBookMarkFragment() {
+        if (BookMarkView.getVisibility() == View.INVISIBLE){
+            BookMarkView.setVisibility(View.VISIBLE);
+        } else {
+            BookMarkView.setVisibility(View.INVISIBLE);
+        }
 
     }
 
     @Override
     public void setBookedPage() {
-        //pageName.add(bookedPageName);
+        Toast.makeText(this, R.string.saveBookMarkClick, Toast.LENGTH_SHORT).show();
+        String string = fragments.get(pagerFragment.getPage()).getURL();
+        bookMarkFragment.setBookMark(string);
+
     }
-
-
-    @Override
-    public void setURL() {
-        pageControlFragment.setText(fragments.get(pagerFragment.getPage()).getURL());
-        if (pageListFragment !=null) {
-            pageListFragment.setNotificationChange();
-        }
-        setTitle(fragments.get(pagerFragment.getPage()).getPageName());
-    }
-
-    public void getPage(int reference){
-        pagerFragment.setPage(reference);
-        if (pageListFragment !=null) {
-            pageListFragment.setNotificationChange();
-        }
-        setTitle(fragments.get(pagerFragment.getPage()).getPageName());
-    }
-
-
 
     @Override
     public ArrayList<PageViewerFragment> getPages() {

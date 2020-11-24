@@ -2,8 +2,8 @@ package edu.temple.browseractivity;
 
 import android.content.Context;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -13,15 +13,16 @@ import android.widget.EditText;
 
 import java.util.Objects;
 
+import edu.temple.browseractivity.R;
+
 public class PageControlFragment extends Fragment {
 
     private static final String KEY = "key";
 
     View l;
+    EditText urlEditText;
 
-    EditText editTextURL;
-
-    ControlInterface parentActivity;
+    ControlInterface controlInterface;
 
     public PageControlFragment() {
         // Required empty public constructor
@@ -31,21 +32,20 @@ public class PageControlFragment extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         if (context instanceof ControlInterface) {
-            parentActivity = (ControlInterface) context;
+            controlInterface = (ControlInterface) context;
         } else {
             throw new RuntimeException(getString(R.string.runTimeException_control));
         }
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putString(KEY, editTextURL.getText().toString());
+        outState.putString(KEY, urlEditText.getText().toString());
         super.onSaveInstanceState(outState);
     }
 
@@ -54,35 +54,37 @@ public class PageControlFragment extends Fragment {
                              Bundle savedInstanceState) {
         l = inflater.inflate(R.layout.fragment_page_control, container, false);
 
-        editTextURL = l.findViewById(R.id.urlEditText);
+        urlEditText = l.findViewById(R.id.urlEditText);
 
         l.findViewById(R.id.goBtn).setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
-                ((ControlInterface) Objects.requireNonNull(getActivity())).goClicked(editTextURL.getText().toString());
+                ((ControlInterface) Objects.requireNonNull(getContext())).goClicked(urlEditText.getText().toString());
             }
+
         });
 
         l.findViewById(R.id.backBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ControlInterface) Objects.requireNonNull(getActivity())).backClicked();
+                ((ControlInterface) Objects.requireNonNull(getContext())).backClicked();
             }
         });
 
         l.findViewById(R.id.nextBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ControlInterface) Objects.requireNonNull(getActivity())).nextClicked();
+                ((ControlInterface) Objects.requireNonNull(getContext())).nextClicked();
             }
         });
+
         return l;
     }
 
-    //setter
     public void setText(String link){
-        if (editTextURL != null) {
-            editTextURL.setText(link);
+        if (urlEditText != null) {
+            urlEditText.setText(link);
         }
     }
 

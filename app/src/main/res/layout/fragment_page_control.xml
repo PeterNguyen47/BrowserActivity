@@ -9,8 +9,9 @@
     <EditText
         android:id="@+id/urlEditText"
         android:layout_width="250dp"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
         android:autofillHints=""
         android:hint="@string/urlText"
         android:inputType="textUri"
@@ -22,41 +23,35 @@
         android:id="@+id/goBtn"
         android:layout_width="50dp"
         android:layout_height="40dp"
-        android:layout_marginStart="1dp"
         android:layout_marginTop="5dp"
-        android:layout_marginEnd="1dp"
+        android:contentDescription="@string/go"
         android:src="@android:drawable/ic_menu_send"
         app:layout_constraintEnd_toStartOf="@+id/backBtn"
         app:layout_constraintStart_toEndOf="@+id/urlEditText"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/go"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/backBtn"
         android:layout_width="50dp"
         android:layout_height="40dp"
-        android:layout_marginStart="1dp"
         android:layout_marginTop="5dp"
-        android:layout_marginEnd="1dp"
+        android:contentDescription="@string/back"
         android:orientation="vertical"
         android:src="@android:drawable/ic_menu_revert"
         app:layout_constraintEnd_toStartOf="@+id/nextBtn"
         app:layout_constraintStart_toEndOf="@+id/goBtn"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/back" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/nextBtn"
         android:layout_width="50dp"
         android:layout_height="40dp"
-        android:layout_marginStart="1dp"
         android:layout_marginTop="5dp"
-        android:layout_marginEnd="1dp"
+        android:contentDescription="@string/next"
         android:rotation="180"
         android:src="@android:drawable/ic_menu_revert"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/backBtn"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/next"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
