@@ -8,8 +8,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import edu.temple.browseractivity.PageViewerFragment;
-
 public class ListAdapter extends BaseAdapter implements android.widget.ListAdapter {
 
     Context context;

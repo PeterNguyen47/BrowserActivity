@@ -13,8 +13,6 @@ import android.widget.EditText;
 
 import java.util.Objects;
 
-import edu.temple.browseractivity.R;
-
 public class PageControlFragment extends Fragment {
 
     private static final String KEY = "key";

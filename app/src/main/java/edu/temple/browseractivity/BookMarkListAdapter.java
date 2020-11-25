@@ -1,6 +1,5 @@
 package edu.temple.browseractivity;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,12 +12,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import edu.temple.browseractivity.PageControlFragment;
-import edu.temple.browseractivity.R;
-
 public class BookMarkListAdapter extends BaseAdapter implements android.widget.ListAdapter {
     Context context;
-    TextView bookMarkTextView;
     ArrayList<String> bookMarkedPage;
     LayoutInflater inflater;
 
@@ -43,30 +38,19 @@ public class BookMarkListAdapter extends BaseAdapter implements android.widget.L
     }
 
 
-    @SuppressLint("InflateParams")
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            bookMarkTextView = new TextView(context);
-            bookMarkTextView.setText((String)getItem(position));
             inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.fragment_book_mark_list, null);
         }
 
-        bookMarkTextView = convertView.findViewById(R.id.bookMarkTextView);
-        bookMarkTextView.setText(bookMarkedPage.get(position));
-        bookMarkTextView.setOnClickListener(new View.OnClickListener() {
+        final TextView bookMarkTextView = convertView.findViewById(R.id.bookMarkTextView);
+        bookMarkTextView.setText(getItem(position));
+        convertView.findViewById(R.id.bookMarkTextView).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((PageControlFragment.ControlInterface) context).goClicked((String) bookMarkTextView.getText());
-            }
-        });
-
-        convertView.findViewById(R.id.deleteBtn).setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                bookMarkedPage.remove(position);
-                notifyDataSetChanged();
             }
         });
 

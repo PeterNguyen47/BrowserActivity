@@ -10,9 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import edu.temple.browseractivity.PagerFragment;
-import edu.temple.browseractivity.R;
-
+import java.util.Objects;
 
 public class PageListFragment extends Fragment {
 
@@ -35,12 +33,12 @@ public class PageListFragment extends Fragment {
         l =inflater.inflate(R.layout.fragment_page_list, container, false);
 
         listView = l.findViewById(R.id.listView);
-        listAdapter = new ListAdapter(getContext(), ((PagerFragment.pagerInterface) getActivity()).getPages());
+        listAdapter = new ListAdapter(getContext(), ((PagerFragment.pagerInterface) Objects.requireNonNull(getActivity())).getPages());
         listView.setAdapter(listAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                ((ListInterface) getActivity()).getPage(position);
+                ((ListInterface) Objects.requireNonNull(getActivity())).getPage(position);
             }
         });
 

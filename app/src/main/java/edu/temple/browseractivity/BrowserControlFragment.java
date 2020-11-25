@@ -24,7 +24,6 @@ public class BrowserControlFragment extends Fragment {
     BookMarkInterface bookMarkInterface;
 
     public BrowserControlFragment() {
-        // Required empty public constructor
     }
 
     @Override

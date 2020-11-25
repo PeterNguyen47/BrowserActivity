@@ -10,19 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
-
-import edu.temple.browseractivity.PageAdapter;
-import edu.temple.browseractivity.PageControlFragment;
-import edu.temple.browseractivity.PageViewerFragment;
-import edu.temple.browseractivity.R;
-
+import java.util.Objects;
 
 public class PagerFragment extends Fragment {
 
     View l;
-
     ViewPager viewPager;
-
     PageAdapter pageAdapter;
 
     public PagerFragment() {
@@ -42,24 +35,25 @@ public class PagerFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         l = inflater.inflate(R.layout.fragment_pager, container, false);
 
-        pageAdapter = new PageAdapter(getFragmentManager(), ((pagerInterface) getActivity()).getPages());
+        assert getFragmentManager() != null;
+        pageAdapter = new PageAdapter(getFragmentManager(), ((pagerInterface) Objects.requireNonNull(getActivity())).getPages());
 
         viewPager = l.findViewById(R.id.viewPager);
         viewPager.setAdapter(pageAdapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                ((PageControlFragment.ControlInterface) getContext()).setURL();
+                ((PageControlFragment.ControlInterface) Objects.requireNonNull(getContext())).setURL();
             }
 
             @Override
             public void onPageSelected(int position) {
-                ((PageControlFragment.ControlInterface) getContext()).setURL();
+                ((PageControlFragment.ControlInterface) Objects.requireNonNull(getContext())).setURL();
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                ((PageControlFragment.ControlInterface) getContext()).setURL();
+                ((PageControlFragment.ControlInterface) Objects.requireNonNull(getContext())).setURL();
             }
         });
         return l;

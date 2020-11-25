@@ -51,7 +51,7 @@ public class PageViewerFragment extends Fragment implements Parcelable {
     };
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         this.context = context;
     }
@@ -82,7 +82,6 @@ public class PageViewerFragment extends Fragment implements Parcelable {
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         l = inflater.inflate(R.layout.fragment_page_viewer, container, false);
 
         webView = l.findViewById(R.id.webView);

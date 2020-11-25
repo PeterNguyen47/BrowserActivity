@@ -4,26 +4,19 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class BrowserActivity extends AppCompatActivity implements PageControlFragment.ControlInterface,
         BrowserControlFragment.BrowserInterface,
         PagerFragment.pagerInterface,
         PageListFragment.ListInterface,
-        BrowserControlFragment.BookMarkInterface {
+        BrowserControlFragment.BookMarkInterface,
+        BookMarkFragment.BookMarkListInterface {
 
     private static final String KEY = "key";
 
@@ -40,7 +33,6 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
     FragmentManager fm;
     FragmentTransaction ft;
 
-    SharedPreferences preferences;
     int orientation;
 
     @Override
@@ -164,7 +156,6 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         } else {
             BookMarkView.setVisibility(View.INVISIBLE);
         }
-
     }
 
     @Override
@@ -172,7 +163,6 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         Toast.makeText(this, R.string.saveBookMarkClick, Toast.LENGTH_SHORT).show();
         String string = fragments.get(pagerFragment.getPage()).getURL();
         bookMarkFragment.setBookMark(string);
-
     }
 
     @Override
