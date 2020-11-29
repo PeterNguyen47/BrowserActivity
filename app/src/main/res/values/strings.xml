@@ -18,4 +18,5 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="bookmarkDeleted">Bookmark Deleted</string>
+    <string name="share">Share</string>
 </resources>
