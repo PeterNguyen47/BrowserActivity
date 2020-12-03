@@ -108,7 +108,6 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_share:
-
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
                 String url = pageControlFragment.setText(fragments.get(pagerFragment.getPage()).getURL());
@@ -119,8 +118,6 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         }
         return super.onOptionsItemSelected(item);
     }
-
-
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
