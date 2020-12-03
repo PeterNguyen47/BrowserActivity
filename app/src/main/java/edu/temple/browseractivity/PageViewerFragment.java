@@ -23,8 +23,10 @@ public class PageViewerFragment extends Fragment implements Parcelable {
     View l;
     Context context;
     WebView webView;
+    String defaultURL;
 
-    public PageViewerFragment() {
+    public PageViewerFragment(String defaultUrl) {
+        this.defaultURL = defaultUrl;
     }
 
     public PageViewerFragment(Parcel in) {
@@ -72,7 +74,7 @@ public class PageViewerFragment extends Fragment implements Parcelable {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState == null) {
-            webView.loadUrl(getString(R.string.home));
+            webView.loadUrl(defaultURL);
         } else {
             webView.restoreState(savedInstanceState);
         }

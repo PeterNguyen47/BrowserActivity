@@ -7,7 +7,9 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +18,7 @@ import android.widget.FrameLayout;
 import android.widget.ShareActionProvider;
 import android.widget.Toast;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -28,10 +31,6 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         BookMarkFragment.BookMarkListInterface {
 
     private static final String KEY = "key";
-
-    private static final String SHARE_KEY = "shareKey";
-
-    private ShareActionProvider shareActionProvider;
 
     BrowserControlFragment browserControlFragment;
     PageControlFragment pageControlFragment;
@@ -47,6 +46,7 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
     FragmentTransaction ft;
 
     int orientation;
+    static final String DEFAULT_URL = "https://www.google.com";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +60,20 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
 
         orientation = getResources().getConfiguration().orientation;
 
+        String defaultUrl = DEFAULT_URL;
+        if (getIntent().getAction() == "android.intent.action.VIEW") {
+            Log.d("New", String.valueOf(getIntent().getAction() != null));
+            Uri uri = this.getIntent().getData();
+            try {
+                URL url = new URL(uri.getScheme(), uri.getHost(), uri.getPath());
+                Log.d("URL", url.toString());
+                defaultUrl = url.toString();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+
+        }
+
         if (fm.findFragmentById(R.id.page_control) == null && fm.findFragmentById(R.id.page_display) == null){
             browserControlFragment = new BrowserControlFragment();
             pageControlFragment = new PageControlFragment();
@@ -67,7 +81,7 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
             bookMarkFragment = new BookMarkFragment();
 
             fragments = new ArrayList<>();
-            fragments.add(new PageViewerFragment());
+            fragments.add(new PageViewerFragment(defaultUrl));
 
             ft.add(R.id.page_control, pageControlFragment)
                     .add(R.id.browser_control, browserControlFragment)
@@ -131,8 +145,8 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         } else if (pageListFragment != null) {
             pageListFragment.setNotificationChange();
         }
-
-        fragments.add(new PageViewerFragment());
+        Log.d("Pager", String.valueOf(pagerFragment == null));
+        fragments.add(new PageViewerFragment(DEFAULT_URL));
         fragments.get(pagerFragment.getPage()).setLink(urlInput);
         pagerFragment.setNotification();
         pageControlFragment.setText(fragments.get(pagerFragment.getPage()).getURL());
@@ -157,7 +171,7 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
 
     @Override
     public void newPageClicked() {
-        fragments.add(new PageViewerFragment());
+        fragments.add(new PageViewerFragment(DEFAULT_URL));
         setTitle(fragments.get(pagerFragment.getPage()).getPageName());
         pagerFragment.setNotification();
         if (pageListFragment != null) {
