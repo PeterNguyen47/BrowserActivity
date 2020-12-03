@@ -11,11 +11,14 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ShareActionProvider;
 import android.widget.Toast;
 
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class BrowserActivity extends AppCompatActivity implements PageControlFragment.ControlInterface,
         BrowserControlFragment.BrowserInterface,
@@ -108,9 +111,11 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
 
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
-                String url = getTitle().toString();
+                String url = pageControlFragment.setText(fragments.get(pagerFragment.getPage()).getURL());
                 intent.putExtra(Intent.EXTRA_TEXT, url);
-                startActivity(Intent.createChooser(intent, null));
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(Intent.createChooser(intent, null));
+                }
         }
         return super.onOptionsItemSelected(item);
     }

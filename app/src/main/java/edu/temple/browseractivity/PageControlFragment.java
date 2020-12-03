@@ -80,10 +80,11 @@ public class PageControlFragment extends Fragment {
         return l;
     }
 
-    public void setText(String link){
+    public String setText(String link){
         if (urlEditText != null) {
             urlEditText.setText(link);
         }
+        return link;
     }
 
     interface ControlInterface {
