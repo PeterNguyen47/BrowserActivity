@@ -5,19 +5,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ActionMenuView;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ShareActionProvider;
 import android.widget.Toast;
+
 import java.util.ArrayList;
 
 public class BrowserActivity extends AppCompatActivity implements PageControlFragment.ControlInterface,
@@ -28,6 +25,8 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         BookMarkFragment.BookMarkListInterface {
 
     private static final String KEY = "key";
+
+    private static final String SHARE_KEY = "shareKey";
 
     private ShareActionProvider shareActionProvider;
 
@@ -105,12 +104,13 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_camera:
+            case R.id.action_share:
+
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
-                intent.putExtra(Intent.EXTRA_TEXT, "https://www.temple.edu");
-
-                startActivity(Intent.createChooser(intent, "Share via"));
+                String url = getTitle().toString();
+                intent.putExtra(Intent.EXTRA_TEXT, url);
+                startActivity(Intent.createChooser(intent, null));
         }
         return super.onOptionsItemSelected(item);
     }
