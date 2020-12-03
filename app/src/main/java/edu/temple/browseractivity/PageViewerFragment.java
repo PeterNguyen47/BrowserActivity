@@ -88,11 +88,6 @@ public class PageViewerFragment extends Fragment implements Parcelable {
 
         // Enable Javascript
         webView.getSettings().setJavaScriptEnabled(true);
-        if (savedInstanceState == null) {
-            webView.loadUrl(getString(R.string.home));
-        } else {
-            webView.restoreState(savedInstanceState);
-        }
 
         webView.setWebViewClient(new WebViewClient(){
             @Override
