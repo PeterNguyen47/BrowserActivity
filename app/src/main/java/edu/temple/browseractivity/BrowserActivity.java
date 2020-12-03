@@ -61,7 +61,7 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         orientation = getResources().getConfiguration().orientation;
 
         String defaultUrl = DEFAULT_URL;
-        if (getIntent().getAction() == "android.intent.action.VIEW") {
+        if (getIntent().getAction() == Intent.ACTION_VIEW) {
             Log.d("New", String.valueOf(getIntent().getAction() != null));
             Uri uri = this.getIntent().getData();
             try {
@@ -110,6 +110,7 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
                 pageListFragment = (PageListFragment) fm.findFragmentById(R.id.page_list);
             }
         }
+
     }
 
     @Override
