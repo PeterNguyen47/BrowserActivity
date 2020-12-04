@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -13,11 +12,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.FrameLayout;
-import android.widget.ShareActionProvider;
 import android.widget.Toast;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -61,10 +57,11 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         orientation = getResources().getConfiguration().orientation;
 
         String defaultUrl = DEFAULT_URL;
-        if (getIntent().getAction() == Intent.ACTION_VIEW) {
+        if (Objects.equals(getIntent().getAction(), Intent.ACTION_VIEW)) {
             Log.d("New", String.valueOf(getIntent().getAction() != null));
             Uri uri = this.getIntent().getData();
             try {
+                assert uri != null;
                 URL url = new URL(uri.getScheme(), uri.getHost(), uri.getPath());
                 Log.d("URL", url.toString());
                 defaultUrl = url.toString();
